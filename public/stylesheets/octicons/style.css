@@ -1,0 +1,25 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #fff;
+  color:#000;
+}
+
+.jumbotron h1{
+	margin: auto;
+	text-align: center;
+}
+
+.jumbotron p{
+	margin: auto;
+	text-align: center;
+}
+
+.google-btn{
+	margin: auto;
+	text-align: center;
+}
+
+a {
+  color: #00B7FF;
+}
