@@ -10,10 +10,13 @@
   "author": "TJaurou",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.13.4"
+    "body-parser": "^1.15.0",
+    "client-sessions": "^0.7.0",
+    "express": "^4.13.4",
+    "mongoose": "^4.4.8"
   },
   "engines": {
-        "node": "4.0.0",
-        "npm": "3.8.2"
-  } 
+    "node": "4.0.0",
+    "npm": "3.8.2"
+  }
 }
