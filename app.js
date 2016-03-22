@@ -83,6 +83,7 @@ app.post('/creationcitoyen', function(req, res){
 		mail: req.body.mail,
 	});
 	user.save(function(err){
+		req.session.user = user;
 		if(err){
 			var error = 'Something bad happened !'
 			if(err.code === 11000){
@@ -90,10 +91,15 @@ app.post('/creationcitoyen', function(req, res){
 			}
 			res.render('creationcitoyen.jade', {error: error})
 		} else{
-			res.redirect('/map');
+			res.redirect('/creationcitoyensuccess');
 		}
 	})
 })
+
+app.get('/creationcitoyensuccess', function(req, res){
+	res.locals.user = req.session.user;
+	res.render('creationcitoyensuccess.jade');
+});
 
 app.get('/map', function(req, res){
 	if(req.session && req.session.user){

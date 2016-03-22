@@ -1,0 +1,47 @@
+doctype html
+html(lang="en")
+  head
+    meta(charset='utf-8')
+    |   
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    |   
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    |   
+    meta(name='google-signin-client_id', content='456503566619-20q669of0e5ts010ft8frbbh8b1atuv7.apps.googleusercontent.com')
+    // The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
+    title Simplyk Platform
+    // fonts
+    link(href='https://fonts.googleapis.com/css?family=Open+Sans:400,300|Slabo+27px', rel='stylesheet', type='text/css')
+    // Bootstrap
+    link(href='./stylesheets/css/bootstrap.min.css', rel='stylesheet')
+    |   
+    link(href='./stylesheets/style-simplyk.css', type='text/css', rel='stylesheet')
+    //
+      <link rel="stylesheet" href="font-awesome-4.5.0/css/font-awesome.min.css">
+      JS
+    script(src='javascripts/jquery-1.12.1.min.js')
+    // Google Sign-in
+    script(src='https://apis.google.com/js/platform.js', async='', defer='')
+    // openlayers
+    script(src='http://openlayers.org/en/v3.13.0/build/ol.js', type='text/javascript')
+    //
+      octicons/fonticons
+      <script src="https://use.fonticons.com/a977a97f.js"></script>
+      <link rel="stylesheet" href="/octicons/octicons.css">
+  body
+    .container-fluid.page
+      // navbar
+      nav#nav-me.navbar.navbar-default
+        .container-fluid
+          .navbar-header
+            a.navbar-brand(href='/')
+              img(alt='Brand', src='images/simplyk-text-egg-hor.png')      
+          ul.nav.navbar-nav.navbar-left
+            li.navbar-brand(role='presentation')
+              span.label.label-danger  SITE EN CONSTRUCTION
+      .container-fluid.section
+        .row
+          .col-md-6.col-md-offset-3
+            h3 Votre compte a bien été créé !<br> Vous pouvez maintenant vous connecter grâce à votre nom: #{user.lname} <br> et à votre adresse e-mail: #{user.mail}
+            button.btn.btn-default(form='conn-cit-form', type='button')
+              a(href='map') Connexion
