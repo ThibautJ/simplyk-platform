@@ -1,0 +1,16 @@
+{
+  "name": "simplyk-platform",
+  "description": "Simplyk web-platform",
+  "scripts": {
+  },
+  "env": {
+  },
+  "addons": [
+
+  ],
+  "buildpacks": [
+    {
+      "url": "urn:buildpack:heroku/nodejs"
+    }
+  ]
+}
