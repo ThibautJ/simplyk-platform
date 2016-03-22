@@ -20,7 +20,7 @@ var app = express();
 app.set('port', (process.env.PORT || 5000));
 
 //Connect to mongo
-mongoose.connect('mongodb://thibaut:Shmpluk2212@ds021999.mlab.com:21999/heroku_ggjmn8rl');
+mongoose.connect('mongodb://thibaut:a@ds021999.mlab.com:21999/heroku_ggjmn8rl');
 
 //middlewares
 app.use(express.static(__dirname + '/public'));
