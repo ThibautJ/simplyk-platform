@@ -18,7 +18,7 @@ var User = mongoose.model('User', new Schema({
 var app = express();
 
 //Connect to mongo
-mongoose.connect('mongodb://localhost/newauth');
+mongoose.connect('mongodb://a:a@ds021999.mlab.com:21999/heroku_ggjmn8rl');
 
 //middlewares
 app.use(express.static('C:/Users/Thibaut/Documents/Code/Node.js/simplyk/public'));
