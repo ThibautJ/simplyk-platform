@@ -17,6 +17,8 @@ var User = mongoose.model('User', new Schema({
 
 var app = express();
 
+app.set('port', (process.env.PORT || 5000));
+
 //Connect to mongo
 mongoose.connect('mongodb://a:a@ds021999.mlab.com:21999/heroku_ggjmn8rl');
 
@@ -126,4 +128,6 @@ app.get('/logout', function(req, res){
 });
 
 
-app.listen(3000);
+app.listen(app.get('port'), function() {
+  console.log('Node app is running on port', app.get('port'));
+});
