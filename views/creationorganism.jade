@@ -96,7 +96,7 @@ head
             if error
               p ERROR : #{error}
             |           
-            form(action='creationorganism', method='post')
+            form#creationorganismform(action='creationorganism', method='post')
               .input-group.conn-input
                 span#basic-addon1.input-group-addon Nom de l'organisme
                 |               
@@ -111,7 +111,7 @@ head
             |           
             .g-signin2.conn-input(data-onsuccess='onSignIn')
             |           
-            button Connexion
+            button(type='submit', form='creationorganismform') Connexion
     |   
     script(type='text/javascript').
       var map = new ol.Map({
