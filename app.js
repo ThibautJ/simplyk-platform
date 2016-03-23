@@ -15,6 +15,12 @@ var User = mongoose.model('User', new Schema({
 	age: String,
 }));
 
+var Organism = mongoose.model('Organism', new Schema({
+	id: ObjectId,
+	oname: String,
+	mail: {type: 	String, unique: true },
+}));
+
 var app = express();
 
 app.set('port', (process.env.PORT || 5000));
@@ -71,6 +77,34 @@ app.post('/connexioncitoyen', function(req, res){
 	}
 })
 
+app.get('/connexionorganism', function(req, res){
+	res.render('connexionorganism.jade');
+});
+
+app.post('/connexionorganism', function(req, res){
+	console.log ('req.body.mail : ' + req.body.mail);
+	if(req.session){
+		Organism.findOne({ mail: req.body.mail}, function(err, organism){
+			if(!organism){
+				var error = "Wrong mail";
+				console.log (error + '1');
+				res.render('connexionorganism.jade', {error: error});
+			} else {
+				if(req.body.lname === organism.lname){
+					req.session.organism = organism; //set-cookie...
+					res.redirect('/map');
+				} else {
+					var error = "Wrong mail";
+					console.log (error + '2');
+					res.render('connexionorganism.jade', {error: error});
+				}
+			}
+		});
+	} else {
+		res.redirect('/connexionorganism');
+	}
+})
+
 app.get('/creationcitoyen', function(req, res){
 	res.render('creationcitoyen.jade');
 });
@@ -97,8 +131,36 @@ app.post('/creationcitoyen', function(req, res){
 })
 
 app.get('/creationcitoyensuccess', function(req, res){
-	res.locals.user = req.session.user;
+	res.locals.organism = req.session.organism;
 	res.render('creationcitoyensuccess.jade');
+});
+
+app.get('/creationorganism', function(req, res){
+	res.render('creationorganism.jade');
+});
+
+app.post('/creationorganism', function(req, res){
+	var organism = new Organism({
+		oname: req.body.oname,
+		mail: req.body.mail,
+	});
+	organism.save(function(err){
+		req.session.organism = organism;
+		if(err){
+			var error = 'Something bad happened !'
+			if(err.code === 11000){
+				var error = 'This email is already used !'
+			}
+			res.render('creationorganism.jade', {error: error})
+		} else{
+			res.redirect('/creationorganismsuccess');
+		}
+	})
+})
+
+app.get('/creationorganismsuccess', function(req, res){
+	res.locals.organism = req.session.organism;
+	res.render('creationorganismsuccess.jade');
 });
 
 app.get('/map', function(req, res){

@@ -93,6 +93,8 @@ head
               h1
                 | Cr&eacute;ez votre compte 
                 small Citoyen
+            if error
+              p ERROR : #{error}
             |           
             form(action='creationcitoyen', method='post')
               .input-group.conn-input
