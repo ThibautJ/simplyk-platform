@@ -131,7 +131,7 @@ app.post('/creationcitoyen', function(req, res){
 })
 
 app.get('/creationcitoyensuccess', function(req, res){
-	res.locals.organism = req.session.organism;
+	res.locals.user = req.session.user;
 	res.render('creationcitoyensuccess.jade');
 });
 
