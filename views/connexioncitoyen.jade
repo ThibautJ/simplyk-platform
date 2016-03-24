@@ -49,7 +49,7 @@ head
                 | Connexion 
                 small Citoyen
             if error
-              p ERROR : #{error}
+              p.alert.alert-danger ERROR : #{error}
 
             form#cit_con_form(action='connexioncitoyen', method='post')
               .input-group.conn-input
@@ -66,7 +66,7 @@ head
             |           
             span#note
             |           
-            button(type='submit', form='cit_con_form') Connexion
+            button.btn.btn-default(type='submit', form='cit_con_form') Connexion
             |           
             .g-signin2.conn-input(data-onsuccess='onSignIn')
     // jQuery (necessary for Bootstrap's JavaScript plugins)

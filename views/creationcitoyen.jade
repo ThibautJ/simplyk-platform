@@ -94,7 +94,7 @@ head
                 | Cr&eacute;ez votre compte 
                 small Citoyen
             if error
-              p ERROR : #{error}
+              p.alert.alert-danger ERROR : #{error}
             |           
             form#creationcitoyenform(action='creationcitoyen', method='post')
               .input-group.conn-input
@@ -121,7 +121,7 @@ head
             |           
             .g-signin2.conn-input(data-onsuccess='onSignIn')
             |           
-            button(type='submit', form='creationcitoyenform') Connexion
+            button.btn.btn-default(type='submit', form='creationcitoyenform') Connexion
     |   
     script(type='text/javascript').
       var map = new ol.Map({

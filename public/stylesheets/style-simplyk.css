@@ -56,3 +56,8 @@ body{
 	padding-left: 0px;
 	padding-right: 0px;
 }
+
+.list-opportunity img{
+	height: 35px;
+	width: 35px;
+}
