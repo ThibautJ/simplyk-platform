@@ -1,203 +1,124 @@
-//Requires
 var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var sessions = require('client-sessions');
+var stormpath = require('express-stormpath');
 var mongoose = require('mongoose');
+
+var routes = require('./routes/index');
+var users = require('./routes/users');
 
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
-var User = mongoose.model('User', new Schema({
-	id: ObjectId,
-	fname: String,
-	lname: String,
-	mail: {type: 	String, unique: true },
-	age: String,
-}));
-
-var Organism = mongoose.model('Organism', new Schema({
-	id: ObjectId,
-	oname: String,
-	mail: {type: 	String, unique: true },
-}));
 
 var app = express();
 
-app.set('port', (process.env.PORT || 5000));
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 
-//Connect to mongo
-mongoose.connect('mongodb://thibaut:a@ds021999.mlab.com:21999/heroku_ggjmn8rl');
+//connect to mongo
+mongoose.connect('mongodb://tjaurou:Oeuf2poule@ds021999.mlab.com:21999/heroku_ggjmn8rl');
 
-//middlewares
-app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(sessions({
-	cookieName: 'session',
-	secret: 'nopeacasvf51355fe4a6«sc4fesv43«s1cd35f86rg45f',
-	duration: 30 * 60 * 1000,
-	activeDuration: 5 * 60 * 1000,
+
+app.use(stormpath.init(app, {
+	web: {
+		register: {
+			form: {
+				fieldOrder: [ 'givenName', 'surname', 'age', 'email', 'password' ],
+				fields: {
+					age: {
+						enabled: true,
+						label: 'Age',
+						placeholder: '49',
+						name: 'age',
+						type: 'number'
+					}
+				}
+			}
+		},
+		login: {
+			nextUri: "/map",
+			form: {
+				fields: {
+					login: {
+						label: 'Your Username or Mail',
+						placeholder: 'email@trustyapp.com'
+					},
+					password: {
+						label: 'Your password'
+					}
+				}
+			}
+		},
+		logout: {
+			enabled: true,
+			uri: '/logout',
+			nextUri: '/'
+		}
+	},
+	postRegistrationHandler: function (account, req, res, next) {
+		account.addToGroup('https://api.stormpath.com/v1/groups/1eqq5FO4Ljea2dnq3mndeg', function(err, membership) {
+			console.log(membership);
+		});
+		console.log('The account\'s group is:', account.groups, ' and has just been registered!');
+		next();
+	},
+	postLoginHandler: function (account, req, res, next) {
+		console.log('Truc');
+		console.log('User:', account.email, 'just logged in!');
+		next();
+	}
 }));
 
-app.set('view engine', 'jade');
-app.locals.pretty = true;
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
-//router
-app.get('/', function(req, res){
-	res.render('accueil.jade');
+app.use('/', routes);
+app.use('/users', users);
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+	var err = new Error('Not Found');
+	err.status = 404;
+	next(err);
 });
 
-app.get('/connexioncitoyen', function(req, res){
-	res.render('connexioncitoyen.jade');
-});
+// error handlers
 
-app.post('/connexioncitoyen', function(req, res){
-	console.log ('req.body.mail : ' + req.body.mail);
-	console.log ('req.body.lname : ' + req.body.lname);
-	if(req.session){
-		console.log ('req.body.mail : ' + req.body.mail);
-		console.log ('req.body.lname : ' + req.body.lname);
-		User.findOne({ mail: req.body.mail}, function(err, user){
-			if(!user){
-				var error = "Wrong mail";
-				console.log (error + '1');
-				res.render('connexioncitoyen.jade', {error: error});
-			} else {
-				if(req.body.lname === user.lname){
-					req.session.user = user; //set-cookie...
-					res.redirect('/map');
-				} else {
-					var error = "Wrong mail";
-					console.log (error + '2');
-					res.render('connexioncitoyen.jade', {error: error});
-				}
-			}
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+	app.use(function(err, req, res, next) {
+		res.status(err.status || 500);
+		res.render('error', {
+			message: err.message,
+			error: err
 		});
-	} else {
-		res.redirect('/connexioncitoyen');
-	}
-})
-
-app.get('/connexionorganism', function(req, res){
-	res.render('connexionorganism.jade');
-});
-
-app.post('/connexionorganism', function(req, res){
-	console.log ('req.body.mail : ' + req.body.mail);
-	if(req.session){
-		Organism.findOne({ mail: req.body.mail}, function(err, organism){
-			if(!organism){
-				var error = "Wrong mail";
-				console.log (error + '1');
-				res.render('connexionorganism.jade', {error: error});
-			} else {
-				if(req.body.lname === organism.lname){
-					req.session.organism = organism; //set-cookie...
-					res.redirect('/map');
-				} else {
-					var error = "Wrong mail";
-					console.log (error + '2');
-					res.render('connexionorganism.jade', {error: error});
-				}
-			}
-		});
-	} else {
-		res.redirect('/connexionorganism');
-	}
-})
-
-app.get('/creationcitoyen', function(req, res){
-	res.render('creationcitoyen.jade');
-});
-
-app.post('/creationcitoyen', function(req, res){
-	var user = new User({
-		fname: req.body.fname,
-		lname: req.body.lname,
-		age: req.body.age,
-		mail: req.body.mail,
 	});
-	user.save(function(err){
-		req.session.user = user;
-		if(err){
-			var error = 'Something bad happened !'
-			if(err.code === 11000){
-				var error = 'This email is already used !'
-			}
-			res.render('creationcitoyen.jade', {error: error})
-		} else{
-			res.redirect('/creationcitoyensuccess');
-		}
-	})
-})
+}
 
-app.get('/creationcitoyensuccess', function(req, res){
-	res.locals.user = req.session.user;
-	res.render('creationcitoyensuccess.jade');
-});
-
-app.get('/creationorganism', function(req, res){
-	res.render('creationorganism.jade');
-});
-
-app.post('/creationorganism', function(req, res){
-	var organism = new Organism({
-		oname: req.body.oname,
-		mail: req.body.mail,
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+	res.status(err.status || 500);
+	res.render('error', {
+		message: err.message,
+		error: {}
 	});
-	organism.save(function(err){
-		req.session.organism = organism;
-		if(err){
-			var error = 'Something bad happened !'
-			if(err.code === 11000){
-				var error = 'This email is already used !'
-			}
-			res.render('creationorganism.jade', {error: error})
-		} else{
-			res.redirect('/creationorganismsuccess');
-		}
-	})
-})
-
-app.get('/creationorganismsuccess', function(req, res){
-	res.locals.organism = req.session.organism;
-	res.render('creationorganismsuccess.jade');
 });
 
-app.get('/map', function(req, res){
-	if(req.session && req.session.user){
-		User.findOne({ email: req.session.email }, function(err, user){
-			if(!user){
-				req.session.reset();
-				res.redirect('/');
-			} else {
-				res.locals.user = user;
-				res.render('map.jade');
-			}
-		})
-	} else {
-		res.redirect('/');
-	}
-});
-
-app.post('/map', function(req, res){
-
-});
-
-app.get('/profile', function(req, res){
-	if(req.session && req.session.user){
-		res.locals.user = req.session.user;
-		res.render('profile.jade');
-	} else {
-		res.redirect('/');
-	}
-});
-
-app.get('/logout', function(req, res){
-	req.session.reset();
-	res.redirect('/');
+app.on('stormpath.ready', function () {
+	console.log('Stormpath Ready!');
 });
 
 
-app.listen(app.get('port'), function() {
-	console.log('Node app is running on port', app.get('port'));
-});
+module.exports = app;
