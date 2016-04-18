@@ -22,8 +22,23 @@ block content
                     h4.media-heading= val.oName
                     a= val.intitule
                     p= 'Pour ' + val.nbBenevoles + ' bénévoles'
-
-
+                  div.media-right.media-middle
+                    button.btn.btn-default(type='button' data-toggle="modal" data-target="#myModal") Informations
+                    #myModal.modal.fade(tabindex='-1', role='dialog')
+                        .modal-dialog
+                            .modal-content
+                              .modal-header
+                                button.close(type='button', data-dismiss='modal', aria-label='Close')
+                                  span(aria-hidden='true') &times;        
+                                #myModalLabel.h4.modal-title= val.oName + ' - ' + val.intitule
+                              .modal-body.my-modal-body
+                                p= 'Date: '+ val.date
+                                p= 'Pour ' + val.nbBenevoles + ' bénévoles'
+                                p= 'Latitude: '+ val.lat
+                                p= 'Lonitude: '+ val.lon
+                              .modal-footer
+                                button.btn.btn-default(type='button', data-dismiss='modal') Close
+                                button.btn.btn-primary(type='button') Contactez
 
 
 block footscript
@@ -53,3 +68,8 @@ block footscript
   script(src='javascripts/my-jquery.js')
   // Include all compiled plugins (below), or include individual files as needed
   script(src='javascripts/bootstrap.min.js')
+  //Modal bootstrap
+  script(type='text/javascript').
+    $('#myModal').on('shown.bs.modal', function () {
+      $('#myInput').focus();
+    })

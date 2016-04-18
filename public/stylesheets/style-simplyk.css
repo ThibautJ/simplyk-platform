@@ -61,3 +61,13 @@ body{
 	height: 35px;
 	width: 35px;
 }
+
+.list-opportunity li:hover{
+	background-color: #C8FFC0;
+}
+
+.my-modal-body {
+	color: white;
+	background-image: url('../images/28.jpg');
+	background-color: #C8FFC0;
+}
