@@ -1,0 +1,29 @@
+extends ./layout.jade
+
+block content
+	#map-section.container-fluid
+		.row
+			.col-md-6.col-md-offset-3
+				.page-header
+					h1
+						| Ajoute une opportunitée
+		.row
+			.col-md-6.col-md-offset-3
+				form#creationoppform(action='addopp', method='post')
+					.input-group.conn-input
+						span#basic-addon1.input-group-addon Intitulé de l'opportunitée
+						input#intitule.form-control(type='text', placeholder='Ex: Nettoyage du Parc Jarry', name='intitule', aria-describedby='basic-addon1')
+					.input-group.conn-input
+						span#basic-addon1.input-group-addon Date
+						input#date.form-control(type='date', placeholder='', name='date', aria-describedby='basic-addon1')
+					.input-group.conn-input
+						span#basic-addon1.input-group-addon Latitude de l'évènement
+						input#lat.form-control(type='number', placeholder='', name='lat', aria-describedby='basic-addon1', step='0.000001')
+					.input-group.conn-input
+						span#basic-addon1.input-group-addon Longitude de l'évènement
+						input#lon.form-control(type='number', placeholder='', name='lon', aria-describedby='basic-addon1', step='0.000001')
+					.input-group.conn-input
+						span#basic-addon1.input-group-addon Nombre de bénévoles
+						input#nbBenevoles.form-control(type='number', placeholder='', name='nbBenevoles', aria-describedby='basic-addon1')
+						input(type='submit', style='position: absolute; left: -9999px; width: 1px; height: 1px;', tabindex='-1')
+				button.btn.btn-default(type='submit', form='creationoppform') Ajout

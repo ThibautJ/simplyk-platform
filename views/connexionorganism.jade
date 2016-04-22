@@ -1,53 +1,15 @@
-doctype html(lang='en')
-head
-    meta(charset='utf-8')
-    |   
-    meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    |   
-    meta(name='viewport', content='width=device-width, initial-scale=1')
-    |   
-    meta(name='google-signin-client_id', content='456503566619-20q669of0e5ts010ft8frbbh8b1atuv7.apps.googleusercontent.com')
-    // The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
-    title Simplyk Platform
-    // fonts
-    link(href='https://fonts.googleapis.com/css?family=Open+Sans:400,300|Slabo+27px', rel='stylesheet', type='text/css')
-    // Bootstrap
-    link(href='./stylesheets/css/bootstrap.min.css', rel='stylesheet')
-    |   
-    link(href='./stylesheets/style-simplyk.css', type='text/css', rel='stylesheet')
-    //
-      <link rel="stylesheet" href="font-awesome-4.5.0/css/font-awesome.min.css">
-      JS
-    script(src='javascripts/jquery-1.12.1.min.js')
-    // Google Sign-in
-    script(src='https://apis.google.com/js/platform.js', async='', defer='')
-    // openlayers
-    script(src='http://openlayers.org/en/v3.13.0/build/ol.js', type='text/javascript')
-    //
-      octicons/fonticons
-      <script src="https://use.fonticons.com/a977a97f.js"></script>
-      <link rel="stylesheet" href="/octicons/octicons.css">
-    
-  body
-    .container-fluid.page
-      // navbar
-      nav#nav-me.navbar.navbar-default
-        .container-fluid
-          .navbar-header
-            a.navbar-brand(href='/')
-              img(alt='Brand', src='images/simplyk-text-egg-hor.png')
-          |         
-          ul.nav.navbar-nav.navbar-left
-            li.navbar-brand(role='presentation')
-              span.label.label-danger  SITE EN CONSTRUCTION
-      |     
+extends ./layout.jade
+block vars
+  - var title = 'Home'
+
+block content
       #map-section.container-fluid
         .row
           .col-md-6.col-md-offset-3
             .page-header
               h1
                 | Connexion 
-                small Citoyen
+                small Organism
             if error
               p.alert.alert-danger ERROR : #{error}
 
@@ -81,15 +43,4 @@ head
       socket.on('misss', function(misss){
       alert('Le serveur vient d\\'envoyer un misss :' + misss.content + ' d\'importance: ' + misss.importance );
       })
-// SCRIPTS
-// Script Google SignIn
-//
-  Script GoogleAnalytics
-  <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-71659502-1', 'auto');
-  ga('send', 'pageview');
-  </script>
+

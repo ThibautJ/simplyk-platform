@@ -61,3 +61,37 @@ body{
 	height: 35px;
 	width: 35px;
 }
+
+a{
+	color: #FF1CB5;
+}
+
+.list-opportunity li:hover{
+    background-color: #E8E52C;
+}
+
+.my-modal-body {
+	color: white;
+	background-image: url('../images/28.jpg');
+	background-color: #C8FFC0;
+}
+
+.pinkow {
+	background-color: #FF1CB5;
+	color: #E8E52C;
+}
+
+.pinkow:hover{
+	background-color: #E8E52C;
+	color: #FF1CB5;
+}
+
+.btn-default {
+	background-color: #25A191;
+	color: #FFC629;
+}
+
+.label-danger {
+	color: #FF1CB5;
+    background-color: #E8E52C;
+}

@@ -1,0 +1,207 @@
+doctype html(lang='en')
+
+block vars
+  - var title = 'Connexion'
+  - var description = 'Log into your account!'
+  - var bodytag = 'login'
+  - var socialProviders = stormpathConfig.web.social
+  - var registerFields = stormpathConfig.web.register.form.fields
+
+head
+    meta(charset='utf-8')
+    |   
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    |   
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    |   
+    meta(name='google-signin-client_id', content='456503566619-20q669of0e5ts010ft8frbbh8b1atuv7.apps.googleusercontent.com')
+    // The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags
+    title Simplyk Platform
+    // fonts
+    link(href='https://fonts.googleapis.com/css?family=Open+Sans:400,300|Slabo+27px', rel='stylesheet', type='text/css')
+    // Bootstrap
+    link(href='./stylesheets/css/bootstrap.min.css', rel='stylesheet')
+    |   
+    link(href='./stylesheets/style-simplyk.css', type='text/css', rel='stylesheet')
+    //
+      <link rel="stylesheet" href="font-awesome-4.5.0/css/font-awesome.min.css">
+      JS
+    script(src='javascripts/jquery-1.12.1.min.js')
+    // Google Sign-in
+    script(src='https://apis.google.com/js/platform.js', async='', defer='')
+    // openlayers
+    script(src='http://openlayers.org/en/v3.13.0/build/ol.js', type='text/javascript')
+    //
+      octicons/fonticons
+      <script src="https://use.fonticons.com/a977a97f.js"></script>
+      <link rel="stylesheet" href="/octicons/octicons.css">
+    
+  body
+    .container-fluid.page
+      // navbar
+      nav#nav-me.navbar.navbar-default
+        .container-fluid
+          .navbar-header
+            a.navbar-brand(href='/')
+              img(alt='Brand', src='images/simplyk-text-egg-hor.png')
+          |         
+          ul.nav.navbar-nav.navbar-left
+            li.navbar-brand(role='presentation')
+              span.label.label-danger  SITE EN CONSTRUCTION
+    .container.custom-container
+      .va-wrapper
+        .view.login-view.container
+          if status
+            .box.row
+              .email-password-area.col-xs-12.large.col-sm-12
+                .header
+                  if status === 'unverified'
+                    span.
+                      Your account verification email has been sent!
+                    p.
+                      Before you can log into your account, you need to activate your
+                      account by clicking the link we sent to your inbox.
+                    p.
+                      Didn't get the email? <a href="#{stormpathConfig.web.verifyEmail.uri}">Click Here</a>.
+                    br
+                  if status === 'verified'
+                    span.
+                      Your Account Has Been Verified
+                    p.
+                      You may now login.
+                  if status === 'created'
+                    span.
+                      Your Account Has Been Created
+                    p.
+                      You may now login.
+                  if status === 'reset'
+                    span.
+                      Password Reset Successfuly
+                    p.
+                      You can now login with your new password.
+                    br
+                  if status === 'forgot'
+                    span.
+                      Password Reset Requested
+                    p.
+                      If an account exists for the email provided, you will
+                      receive an email shortly.
+            br
+          .box.row
+            if hasSocialProviders
+              - var cls = 'small col-sm-8'
+            else
+              - var cls = 'large col-sm-12'
+
+            div(class='email-password-area col-xs-12 #{cls}')
+              .header
+                if stormpathConfig.web.register.enabled
+                  span.
+                    Log In or <a href="#{stormpathConfig.web.register.uri}">Create Account</a>
+                else
+                  span.
+                    Log In
+
+              if error
+                .alert.alert-danger.bad-login
+                  p #{error}
+
+              if formErrors
+                .alert.alert-danger.bad-login
+                  each error in formErrors
+                    p #{error.error}
+
+              form.login-form.form-horizontal(method='post', role='form',action=formActionUri)
+                input(name='_csrf', type='hidden', value=csrfToken)
+
+                .form-group.group-email
+                  if hasSocialProviders
+                    - var cls = 'col-sm-12'
+                  else
+                    - var cls = 'col-sm-4'
+
+                  if registerFields.username && registerFields.username.enabled
+                    label(class='#{cls}') Username or Email
+                  else
+                    label(class='#{cls}') Email
+
+                  if hasSocialProviders
+                    - var cls = 'col-sm-12'
+                  else
+                    - var cls = 'col-sm-8'
+
+                  div(class='#{cls}')
+                    - var value = form.data ? form.data.login : '';
+                    if registerFields.username && registerFields.username.enabled
+                      input.form-control(autofocus='true', placeholder='Username or Email', required=true, name='login', type='text', value=value)
+                    else
+                      input.form-control(autofocus='true', placeholder='Email', required=true, name='login', type='text', value=value)
+
+                if hasSocialProviders
+                  - var cls = 'col-sm-12'
+                else
+                  - var cls = 'col-sm-4'
+
+                .form-group.group-password
+                  label(class='#{cls}') Password
+
+                  if hasSocialProviders
+                    - var cls = 'col-sm-12'
+                  else
+                    - var cls = 'col-sm-8'
+
+                  div(class='#{cls}')
+                    input.form-control(placeholder='Password', required=true, type='password', name='password')
+
+                div
+                  button.login.btn.btn-login.btn-sp-green(type='submit') Log In
+
+            //if hasSocialProviders
+              .social-area.col-xs-12.col-sm-4
+                .header &nbsp;
+                label Easy 1-click login:
+                if socialProviders.facebook && socialProviders.facebook.enabled
+                  include facebook_login_form.jade
+                if socialProviders.google && socialProviders.google.enabled
+                  include google_login_form.jade
+                if socialProviders.linkedin && socialProviders.linkedin.enabled
+                  include linkedin_login_form.jade
+                if socialProviders.github && socialProviders.github.enabled
+                  include github_login_form.jade
+
+          if stormpathConfig.web.verifyEmail.enabled
+            a.forgot(style="float:left", href="#{stormpathConfig.web.verifyEmail.uri}") Resend Verification Email?
+          if stormpathConfig.web.forgotPassword.enabled
+            a.forgot(style="float:right", href="#{stormpathConfig.web.forgotPassword.uri}") Forgot Password?
+
+
+
+
+
+
+
+
+    // jQuery (necessary for Bootstrap's JavaScript plugins)
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
+    // jQuery
+    script(src='javascripts/my-jquery.js')
+    // Include all compiled plugins (below), or include individual files as needed
+    script(src='javascripts/bootstrap.min.js')
+    script(src='/socket.io/socket.io.js')
+    script.
+      var socket = io.connect('http://localhost:3000');
+      socket.on('misss', function(misss){
+      alert('Le serveur vient d\\'envoyer un misss :' + misss.content + ' d\'importance: ' + misss.importance );
+      })
+// SCRIPTS
+// Script Google SignIn
+//
+  Script GoogleAnalytics
+  <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-71659502-1', 'auto');
+  ga('send', 'pageview');
+  </script>
