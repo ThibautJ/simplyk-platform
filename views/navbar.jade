@@ -1,4 +1,6 @@
 // navbar
+block vars
+  -
 nav#nav-me.navbar.navbar-default
   .container-fluid
     .navbar-header
@@ -8,8 +10,12 @@ nav#nav-me.navbar.navbar-default
       li.navbar-brand(role='presentation')
         span.label.label-danger SITE EN CONSTRUCTION
     ul.nav.navbar-nav.navbar-right
+      if user
+        if user.group == organism
+          li.navbar-link(role='presentation')
+            a(href='addopp') Ajouter un mandat
       li.navbar-link(role='presentation')
         a(href='profile') Mon profil
       li.navbar-link(role='presentation')
         form.navbar-form( method='post', action='logout')
-          button.btn.btn-success-outline(type='submit') Déconnexion
+          button.btn.btn-success-outline.pinkow(type='submit') Déconnexion

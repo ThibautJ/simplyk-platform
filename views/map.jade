@@ -1,5 +1,5 @@
 extends ./layout.jade
-block vars
+block vars.
   - var title = 'Home'
   - var opps = #{opps}
 
@@ -10,9 +10,6 @@ block content
             #map.map
           #offers-list.col-md-5.no-side-padding
             ul.list-group.list-opportunity
-              li.list-group-item
-                button.btn.btn-default
-                  a(href='addopp') Ajouter un mandat
               each val, index in opps
                 li.list-group-item 
                   div.media-left.media-middle
@@ -25,20 +22,20 @@ block content
                   div.media-right.media-middle
                     button.btn.btn-default(type='button' data-toggle="modal" data-target="#myModal") Informations
                     #myModal.modal.fade(tabindex='-1', role='dialog')
-                        .modal-dialog
-                            .modal-content
-                              .modal-header
-                                button.close(type='button', data-dismiss='modal', aria-label='Close')
-                                  span(aria-hidden='true') &times;        
-                                #myModalLabel.h4.modal-title= val.oName + ' - ' + val.intitule
-                              .modal-body.my-modal-body
-                                p= 'Date: '+ val.date
-                                p= 'Pour ' + val.nbBenevoles + ' bénévoles'
-                                p= 'Latitude: '+ val.lat
-                                p= 'Lonitude: '+ val.lon
-                              .modal-footer
-                                button.btn.btn-default(type='button', data-dismiss='modal') Close
-                                button.btn.btn-primary(type='button') Contactez
+                      .modal-dialog
+                          .modal-content
+                            .modal-header
+                              button.close(type='button', data-dismiss='modal', aria-label='Close')
+                                span(aria-hidden='true') &times;        
+                              #myModalLabel.h4.modal-title= val.oName + ' - ' + val.intitule
+                            .modal-body.my-modal-body
+                              p= 'Date: '+ val.date
+                              p= 'Pour ' + val.nbBenevoles + ' bénévoles'
+                              p= 'Latitude: '+ val.lat
+                              p= 'Lonitude: '+ val.lon
+                            .modal-footer
+                              button.btn.btn-default(type='button', data-dismiss='modal') Close
+                              button.btn.btn-primary.pinkow(type='button') Contactez
 
 
 block footscript

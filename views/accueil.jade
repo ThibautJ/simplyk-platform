@@ -4,16 +4,20 @@ extends ./layout.jade
   
 
 block content
-      #map-section.container-fluid
+      #map-section.container-fluid.degrade
         .row
-          .col-md-6.col-md-offset-3
+          .col-md-8.col-md-offset-2
             .page-header
               h1
                 | Bienvenue 
                 small Simplyk
+              h2
+                small Que tu sois un citoyen ou un organisme en recherche de bénévoles, rejoins-nous !
+            if error
+              p.alert.alert-danger ERROR : #{error}
         |       
         .row
-          .col-md-4.col-md-offset-1
+          .col-md-4.col-md-offset-2
             .page-header
               h3 Connexion
             |           
@@ -21,13 +25,8 @@ block content
               .btn-group.conn-input(role='group')
                 .conn-input
                   button.btn.btn-default(form='conn-cit-form', type='button')
-                    a(href='login') En tant que citoyen
-                |               
-                .conn-input
-                  button.btn.btn-default(form='conn-cit-form', type='button')
-                    a(href='connexionorganism') En tant qu'organisme
-          |         
-          .col-md-4.col-md-offset-2
+                    a.btn-default(href='login') On se connecte
+          .col-md-4
             .page-header
               h3 Créer un compte
             |           
@@ -35,11 +34,7 @@ block content
               .btn-group.conn-input(role='group')
                 .conn-input
                   button#cit-creat-account.btn.btn-default(form='conn-cit-form')
-                    a(href='register') En tant que citoyen
-                |               
-                .conn-input
-                  button.btn.btn-default(form='conn-cit-form', type='button')
-                    a(href='creationorganism') En tant qu'organisme
+                    a.btn-default(href='register') Rentre dans l'aventure
 script(type='text/javascript').
   var map = new ol.Map({
   target: 'map',  //'map' est l'id du div dans lequel va se trouver la map 

@@ -28,16 +28,7 @@ app.use(stormpath.init(app, {
 	web: {
 		register: {
 			form: {
-				fieldOrder: [ 'givenName', 'surname', 'age', 'email', 'password' ],
-				fields: {
-					age: {
-						enabled: true,
-						label: 'Age',
-						placeholder: '49',
-						name: 'age',
-						type: 'number'
-					}
-				}
+				fieldOrder: ['email', 'password' ]
 			}
 		},
 		login: {
@@ -61,7 +52,7 @@ app.use(stormpath.init(app, {
 		}
 	},
 	postRegistrationHandler: function (account, req, res, next) {
-		account.addToGroup('https://api.stormpath.com/v1/groups/1eqq5FO4Ljea2dnq3mndeg', function(err, membership) {
+		account.addToGroup('https://api.stormpath.com/v1/groups/7TRKTb2bhnKW4ljtviA4c7', function(err, membership) {
 			console.log(membership);
 		});
 		console.log('The account\'s group is:', account.groups, ' and has just been registered!');

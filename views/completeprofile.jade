@@ -1,0 +1,69 @@
+extends ./layout.jade
+
+block content
+	#map-section.container-fluid
+		.row
+			.col-md-6.col-md-offset-3
+				.page-header
+					h1
+						| Un dernier petit effort le temps de compléter ton profil
+		.row
+			.col-md-3.col-md-offset-3
+				button.btn.btn-default(type='button' data-toggle="modal" data-target="#myModalCitizen") Bénévole
+				#myModalCitizen.modal.fade(tabindex='-1', role='dialog')
+					.modal-dialog(role= 'document')
+						.modal-content
+							.modal-header
+								button.close(type='button', data-dismiss='modal', aria-label='Close')
+									span(aria-hidden='true') &times;        
+								#myModalCitizenLabel.h4.modal-title Mes informations de bénévoles
+							.modal-body
+								form#citizenInfo(action='completeprofile', method='post')
+									.input-group.conn-input
+										span#basic-addon1.input-group-addon Nom
+										input#givenName.form-control(type='text', placeholder='', name='givenName', aria-describedby='basic-addon1')
+									.input-group.conn-input
+										span#basic-addon1.input-group-addon Prénom
+										input#surname.form-control(type='text', placeholder='', name='surname', aria-describedby='basic-addon1')
+									.input-group.conn-input
+										span#basic-addon1.input-group-addon Age
+										input#age.form-control(type='number', placeholder='49', name='age', aria-describedby='basic-addon1', step='1')
+							.modal-footer
+								button.btn.btn-default(type='button', data-dismiss='modal') Close
+								button.btn.btn-default(type='submit', form='citizenInfo') Entrer
+			.col-md-3
+				button.btn.btn-default(type='button' data-toggle="modal" data-target="#myModalOrganism") Organisme
+				#myModalOrganism.modal.fade(tabindex='-1', role='dialog')
+					.modal-dialog(role= 'document')
+						.modal-content
+							.modal-header
+								button.close(type='button', data-dismiss='modal', aria-label='Close')
+									span(aria-hidden='true') &times;        
+								#myModalOrganismLabel.h4.modal-title Les informations de mon organisme
+							.modal-body
+								form#organismInfo(action='completeprofile', method='post')
+									.input-group.conn-input
+										span#basic-addon1.input-group-addon Nom de l'organisme
+										input#intitule.form-control(type='text', placeholder='', name='oName', aria-describedby='basic-addon1')
+									.input-group.conn-input
+										span#basic-addon1.input-group-addon Nom du contact
+										input#date.form-control(type='text', placeholder='', name='contactName', aria-describedby='basic-addon1')
+									.input-group.conn-input
+										span#basic-addon1.input-group-addon Téléphone
+										input#lat.form-control(type='number', placeholder='5145703045', name='phone', aria-describedby='basic-addon1', step='1')
+							.modal-footer
+								button.btn.btn-default(type='button', data-dismiss='modal') Fermer
+								button.btn.btn-default(type='submit', form='organismInfo') Entrer
+
+block footscript
+	// jQuery (necessary for Bootstrap's JavaScript plugins)
+	script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
+	// jQuery
+	script(src='javascripts/my-jquery.js')
+	// Include all compiled plugins (below), or include individual files as needed
+	script(src='javascripts/bootstrap.min.js')
+	//Modal bootstrap
+	script(type='text/javascript').
+		$('#myModalOrganism').on('shown.bs.modal', function () {
+			$('#myInput').focus();
+		});
