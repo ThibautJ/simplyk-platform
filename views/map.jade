@@ -1,7 +1,5 @@
 extends ./layout.jade
-block vars.
-  - var title = 'Home'
-  - var opps = #{opps}
+- var opps = #{opps}
 
 block content
       #map-section.container-fluid
@@ -39,26 +37,16 @@ block content
 
 
 block footscript
-  script(type='text/javascript').
-        var map = new ol.Map({
-        target: 'map',  //'map' est l'id du div dans lequel va se trouver la map
-        layers: [
-        new ol.layer.Tile({
-        source: new ol.source.Stamen({layer: 'terrain'})
-        })/*,
-        new ol.layer.Tile({
-            title: 'Global Imagery',
-            source: new ol.source.TileWMS({
-              url: 'http://demo.opengeo.org/geoserver/wms',
-              params: {LAYERS: 'nasa:bluemarble', VERSION: '1.1.1'}
-            })
-          })*/
-        ],
-        view: new ol.View({
-        center: ol.proj.fromLonLat([-73.62, 45.48 ]),
-        zoom: 14
-        })
-        });
+  script.
+    function initMap(){
+      var mapDiv = document.getElementById('map');
+      var map = new google.maps.Map(mapDiv, {
+        center: {lat: 45.503, lng: -73.613},
+        zoom: 12
+      });
+    }
+  script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRPJIqo9jqMb99E47aKuO64rxugd3S-Wk&callback=initMap"
+         async defer)
   // jQuery (necessary for Bootstrap's JavaScript plugins)
   script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
   // jQuery
