@@ -39,6 +39,11 @@ block content
 block footscript
   script.
     function initMap(){
+      function listStar(text){
+        var list = document.getElementById("offers-list").childNodes;
+        //opplist
+        console.log(list);
+      }
       var mapDiv = document.getElementById('map');
       var map = new google.maps.Map(mapDiv, {
         center: {lat: 45.503, lng: -73.613},
@@ -49,8 +54,16 @@ block footscript
       var opports = !{JSON.stringify(opps)};
       var infowindows = [];
       var markers = [];
+      function attachInfoWindow(marker, infoWindow, opp){
+        marker.addListener('click', function(){
+          infoWindow.open(map, marker);
+        });
+        marker.addListener('mouseover', function(){
+          listStar(opp.lat);
+        });
+      };
       for(i=0; i<opports.length; i++){
-        console.log(opports[i].intitule + "marker generated");
+        console.log(opports[i].intitule + " marker generated");
         var opp = opports[i];
         infowindows[i] = new google.maps.InfoWindow({
           content: opp.intitule
@@ -60,20 +73,8 @@ block footscript
           map: map,
           clickable: true
         });
-        markers[i].addListener('click', function(marker, i){
-          infowindows[i].open(map, markers[i]);
-        });
+        attachInfoWindow(markers[i], infowindows[i], opp);
       }
-      var marker = new google.maps.Marker({
-        position: {lat: 45.503, lng: -73.613},
-        map: map,
-        title: 'Hello World!'
-      });
-      var marker = new google.maps.Marker({
-        position: {lat: 45.51, lng: -73.615},
-        map: map,
-        title: 'Hello World!'
-      });
     }
   script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRPJIqo9jqMb99E47aKuO64rxugd3S-Wk&callback=initMap"
          async defer)
@@ -87,4 +88,4 @@ block footscript
   script(type='text/javascript').
     $('#myModal').on('shown.bs.modal', function () {
       $('#myInput').focus();
-    })
+    });
