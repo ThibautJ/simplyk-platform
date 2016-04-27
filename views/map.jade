@@ -1,7 +1,5 @@
 extends ./layout.jade
-block vars.
-  - var title = 'Home'
-  - var opps = #{opps}
+- var opps = #{opps}
 
 block content
       #map-section.container-fluid
@@ -11,14 +9,14 @@ block content
           #offers-list.col-md-5.no-side-padding
             ul.list-group.list-opportunity
               each val, index in opps
-                li.list-group-item 
+                li.list-group-item
                   div.media-left.media-middle
                     a(href='profile')
                       img.media-object(src='images/clouds.jpg')
                   div.media-body
                     h4.media-heading= val.oName
                     a= val.intitule
-                    p= 'Pour ' + val.nbBenevoles + ' bénévoles'
+                    p= 'Pour Rugby' + val.nbBenevoles + ' bénévoles'
                   div.media-right.media-middle
                     button.btn.btn-default(type='button' data-toggle="modal" data-target="#myModal") Informations
                     #myModal.modal.fade(tabindex='-1', role='dialog')
@@ -39,26 +37,47 @@ block content
 
 
 block footscript
-  script(type='text/javascript').
-        var map = new ol.Map({
-        target: 'map',  //'map' est l'id du div dans lequel va se trouver la map
-        layers: [
-        new ol.layer.Tile({
-        source: new ol.source.Stamen({layer: 'terrain'})
-        })/*,
-        new ol.layer.Tile({
-            title: 'Global Imagery',
-            source: new ol.source.TileWMS({
-              url: 'http://demo.opengeo.org/geoserver/wms',
-              params: {LAYERS: 'nasa:bluemarble', VERSION: '1.1.1'}
-            })
-          })*/
-        ],
-        view: new ol.View({
-        center: ol.proj.fromLonLat([-73.62, 45.48 ]),
-        zoom: 14
-        })
+  script.
+    function initMap(){
+      function listStar(text){
+        var list = document.getElementById("offers-list").childNodes;
+        //opplist
+        console.log(list);
+      }
+      var mapDiv = document.getElementById('map');
+      var map = new google.maps.Map(mapDiv, {
+        center: {lat: 45.503, lng: -73.613},
+        zoom: 12,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      });
+      //Generate markers
+      var opports = !{JSON.stringify(opps)};
+      var infowindows = [];
+      var markers = [];
+      function attachInfoWindow(marker, infoWindow, opp){
+        marker.addListener('click', function(){
+          infoWindow.open(map, marker);
         });
+        marker.addListener('mouseover', function(){
+          listStar(opp.lat);
+        });
+      };
+      for(i=0; i<opports.length; i++){
+        console.log(opports[i].intitule + " marker generated");
+        var opp = opports[i];
+        infowindows[i] = new google.maps.InfoWindow({
+          content: opp.intitule
+        });
+        markers[i] = new google.maps.Marker({
+          position: {lat: opp.lat, lng: opp.lon},
+          map: map,
+          clickable: true
+        });
+        attachInfoWindow(markers[i], infowindows[i], opp);
+      }
+    }
+  script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRPJIqo9jqMb99E47aKuO64rxugd3S-Wk&callback=initMap"
+         async defer)
   // jQuery (necessary for Bootstrap's JavaScript plugins)
   script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
   // jQuery
@@ -69,4 +88,4 @@ block footscript
   script(type='text/javascript').
     $('#myModal').on('shown.bs.modal', function () {
       $('#myInput').focus();
-    })
+    });
