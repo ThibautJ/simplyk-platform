@@ -37,13 +37,16 @@ router.get('/customData', stormpath.getUser, function(req, res, next) {
 
 /*GET map page*/
 router.get('/map', stormpath.loginRequired, stormpathGroupsRequired(['citizens','organism'], false), function(req, res){
+	console.log('debut get.map() and citizens :' + req.session.citizens)
 	Opp.find({}, function(err, opps){
 		if(err){
 			console.log(err);
+			res.locals.session = req.session;
 			res.render('map.jade');
 		}
 		//Create opps list
 		else{
+			res.locals.session = req.session;
 			res.render('map.jade', {opps: opps});
 		}
 	})
@@ -51,7 +54,7 @@ router.get('/map', stormpath.loginRequired, stormpathGroupsRequired(['citizens',
 
 router.get('/profile', stormpath.getUser, stormpathGroupsRequired(['citizens','organism'], false), function(req,res){
 	console.log('Connected with the group: ' + req.user.group + ' !')
-	res.render('profile.jade');
+	res.render('profile.jade', {session: req.session});
 });
 
 router.get('/addopp', stormpath.groupsRequired(['organism'], false), function(req, res){
@@ -122,5 +125,10 @@ router.post('/completeprofile', stormpath.getUser, function(req,res){
 		res.json(req.body);
 	}
 });
+
+router.post('/logout', function(req, res){
+	req.session.destroy();
+	res.redirect('/');
+})
 
 module.exports = router;

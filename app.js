@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var stormpath = require('express-stormpath');
 var mongoose = require('mongoose');
+var session = require('client-sessions');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -23,6 +24,11 @@ app.set('view engine', 'jade');
 //connect to mongo
 mongoose.connect('mongodb://tjaurou:Oeuf2poule@ds021999.mlab.com:21999/heroku_ggjmn8rl');
 
+app.use(session({
+	cookieName: 'session',
+	secret: 'rcmscgsamfion81152627lolmamparohu,,loui',
+	activeDuration: 1500 * 60 * 1000
+}));
 
 app.use(stormpath.init(app, {
 	web: {
@@ -59,8 +65,25 @@ app.use(stormpath.init(app, {
 		next();
 	},
 	postLoginHandler: function (account, req, res, next) {
-		console.log('Truc');
-		console.log('User:', account.email, 'just logged in!');
+		//Add user's groups to session.groups
+		req.session.citizens = false;
+		req.session.organism = false;
+		account.getGroups(function(err, groups) {
+			groups.each(function(group, cb) {
+				console.log(group.name);
+				if(group.name == 'citizens'){
+					req.session.citizens = true;
+					console.log('On valide la citizens' + req.session.citizens);
+				}
+				else if(group.name == 'organism'){
+					req.session.organism = true;
+				}
+				cb();
+			}, function(err) {
+				console.log('Fin du parcours des groupes : citizens : '+ req.session.citizens + ' organism: ' + req.session.organism)
+			});
+		});
+		console.log('User:', account.email, 'just logged in! ' + req.session.citizens + req.session.organism);
 		next();
 	}
 }));

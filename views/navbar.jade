@@ -11,11 +11,13 @@ nav#nav-me.navbar.navbar-default
         span.label.label-danger SITE EN CONSTRUCTION
     ul.nav.navbar-nav.navbar-right
       if user
-        if user.group == organism
+        if session.citizens
           li.navbar-link(role='presentation')
             a(href='addopp') Ajouter un mandat
+      if session
       li.navbar-link(role='presentation')
         a(href='profile') Mon profil
+      if session
       li.navbar-link(role='presentation')
         form.navbar-form( method='post', action='logout')
           button.btn.btn-success-outline.pinkow(type='submit') Déconnexion
