@@ -9,7 +9,7 @@ block content
           #offers-list.col-md-5.no-side-padding
             ul.list-group.list-opportunity
               each val, index in opps
-                li.list-group-item 
+                li.list-group-item
                   div.media-left.media-middle
                     a(href='profile')
                       img.media-object(src='images/clouds.jpg')
@@ -42,7 +42,37 @@ block footscript
       var mapDiv = document.getElementById('map');
       var map = new google.maps.Map(mapDiv, {
         center: {lat: 45.503, lng: -73.613},
-        zoom: 12
+        zoom: 12,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      });
+      //Generate markers
+      var opports = !{JSON.stringify(opps)};
+      var infowindows = [];
+      var markers = [];
+      for(i=0; i<opports.length; i++){
+        console.log(opports[i].intitule + "marker generated");
+        var opp = opports[i];
+        infowindows[i] = new google.maps.InfoWindow({
+          content: opp.intitule
+        });
+        markers[i] = new google.maps.Marker({
+          position: {lat: opp.lat, lng: opp.lon},
+          map: map,
+          clickable: true
+        });
+        markers[i].addListener('click', function(marker, i){
+          infowindows[i].open(map, markers[i]);
+        });
+      }
+      var marker = new google.maps.Marker({
+        position: {lat: 45.503, lng: -73.613},
+        map: map,
+        title: 'Hello World!'
+      });
+      var marker = new google.maps.Marker({
+        position: {lat: 45.51, lng: -73.615},
+        map: map,
+        title: 'Hello World!'
       });
     }
   script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRPJIqo9jqMb99E47aKuO64rxugd3S-Wk&callback=initMap"
