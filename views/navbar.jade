@@ -1,6 +1,8 @@
 // navbar
 block vars
-  -
+  - var session = session
+  - var page
+
 nav#nav-me.navbar.navbar-default
   .container-fluid
     .navbar-header
@@ -11,13 +13,13 @@ nav#nav-me.navbar.navbar-default
         span.label.label-danger SITE EN CONSTRUCTION
     ul.nav.navbar-nav.navbar-right
       if user
-        if session.citizens
+        unless page=='profile'
           li.navbar-link(role='presentation')
-            a(href='addopp') Ajouter un mandat
-      if session
-      li.navbar-link(role='presentation')
-        a(href='profile') Mon profil
-      if session
-      li.navbar-link(role='presentation')
-        form.navbar-form( method='post', action='logout')
-          button.btn.btn-success-outline.pinkow(type='submit') Déconnexion
+            a(href='profile') Mon profil
+        unless page=='map'
+          li.navbar-link(role='presentation')
+            a(href='map') Carte
+      if user
+        li.navbar-link(role='presentation')
+          form.navbar-form( method='post', action='logout')
+            button.btn.btn-success-outline.pinkow(type='submit') Déconnexion

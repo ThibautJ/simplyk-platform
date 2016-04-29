@@ -53,37 +53,15 @@ app.use(stormpath.init(app, {
 		},
 		logout: {
 			enabled: true,
-			uri: '/logout',
 			nextUri: '/'
 		}
 	},
 	postRegistrationHandler: function (account, req, res, next) {
-		account.addToGroup('https://api.stormpath.com/v1/groups/7TRKTb2bhnKW4ljtviA4c7', function(err, membership) {
-			console.log(membership);
-		});
-		console.log('The account\'s group is:', account.groups, ' and has just been registered!');
+		console.log('The account has just been registered!');
 		next();
 	},
 	postLoginHandler: function (account, req, res, next) {
-		//Add user's groups to session.groups
-		req.session.citizens = false;
-		req.session.organism = false;
-		account.getGroups(function(err, groups) {
-			groups.each(function(group, cb) {
-				console.log(group.name);
-				if(group.name == 'citizens'){
-					req.session.citizens = true;
-					console.log('On valide la citizens' + req.session.citizens);
-				}
-				else if(group.name == 'organism'){
-					req.session.organism = true;
-				}
-				cb();
-			}, function(err) {
-				console.log('Fin du parcours des groupes : citizens : '+ req.session.citizens + ' organism: ' + req.session.organism)
-			});
-		});
-		console.log('User:', account.email, 'just logged in! ' + req.session.citizens + req.session.organism);
+		console.log('User:', account.email, 'just logged in! ');
 		next();
 	}
 }));
