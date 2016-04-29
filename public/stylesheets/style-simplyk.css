@@ -38,6 +38,10 @@ body{
 	height: 87vh;
 }
 
+#map-section{
+	min-height: 90%;
+}
+
 #offers-list{
 	overflow: auto;
 }
@@ -68,6 +72,10 @@ a{
 
 .list-opportunity li:hover{
     background-color: #E8E52C;
+}
+
+.starring{
+	background-color: #E8E52C;
 }
 
 .my-modal-body {

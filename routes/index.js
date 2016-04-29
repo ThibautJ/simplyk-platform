@@ -30,28 +30,27 @@ router.get('/user', stormpath.getUser, function(req, res, next) {
 	res.json(req.user);
 });
 
-router.get('/customData', stormpath.getUser, function(req, res, next) {
+router.get('/customData', stormpath.getUser, stormpath.loginRequired, function(req, res, next) {
 	var customData = req.user.getCustomData();
 	res.json(customData);
 });
 
 /*GET map page*/
-router.get('/map', stormpath.loginRequired, stormpathGroupsRequired(['citizens','organism'], false), function(req, res){
+router.get('/map', stormpath.getUser, stormpath.loginRequired, function(req, res){
 	Opp.find({}, function(err, opps){
 		if(err){
 			console.log(err);
-			res.render('map.jade');
+			res.render('map.jade', {session: req.session});
 		}
 		//Create opps list
 		else{
-			res.render('map.jade', {opps: opps});
+			res.render('map.jade', {opps: opps, session: req.session});
 		}
 	})
 });
 
-router.get('/profile', stormpath.getUser, stormpathGroupsRequired(['citizens','organism'], false), function(req,res){
-	console.log('Connected with the group: ' + req.user.group + ' !')
-	res.render('profile.jade');
+router.get('/profile', stormpath.getUser, stormpath.loginRequired, function(req,res){
+	res.render('profile.jade', {session: req.session});
 });
 
 router.get('/addopp', stormpath.groupsRequired(['organism'], false), function(req, res){
@@ -76,51 +75,6 @@ router.post('/addopp', stormpath.getUser, function(req,res){
 			res.redirect('/map');
 		}
 	})
-});
-
-//Complete your profile the first time you log in
-router.get('/completeprofile', stormpath.getUser, stormpathGroupsRequired(['todefine']), function(req,res){
-	res.render('completeprofile.jade');
-});
-
-router.post('/completeprofile', stormpath.getUser, function(req,res){
-	// /!\ Alse, we need to remove the user from the 'todefine' group !
-	var user = req.user;
-	//If user = organism
-	if(req.body.phone){
-		user.addToGroup('https://api.stormpath.com/v1/groups/3H99evnnjjLQZUfHL7Ib9B', function(err, membership){
-			if(err){
-				var err = 'Something bad happened! Try again!';
-				res.render('accueil.jade');// /!\ A COMPLETER
-			}
-			else{
-				console.log('The user has been added to group: ' + membership);
-			}
-		});
-		user.customData.contactName = req.body.contactName;
-		user.customData.oName = req.body.oName;
-		user.customData.phone = req.body.phone;
-		res.redirect('/map');
-	}
-	//If user = organism
-	else if (req.body.age){
-		user.addToGroup('https://api.stormpath.com/v1/groups/1eqq5FO4Ljea2dnq3mndeg', function(err, membership){
-			if(err){
-				var err = 'Something bad happened! Try again!';
-				res.render('accueil.jade');// /!\ A COMPLETER
-			}
-			else{
-				console.log('The user has been added to group: ' + membership);
-			}
-		});
-		user.givenName = req.body.givenName;
-		user.surname = req.body.surname;
-		user.customData.age = req.body.age;
-		res.redirect('/map');
-	}
-	else {
-		res.json(req.body);
-	}
 });
 
 module.exports = router;

@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var stormpath = require('express-stormpath');
 var mongoose = require('mongoose');
+var session = require('client-sessions');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -23,6 +24,11 @@ app.set('view engine', 'jade');
 //connect to mongo
 mongoose.connect('mongodb://tjaurou:Oeuf2poule@ds021999.mlab.com:21999/heroku_ggjmn8rl');
 
+app.use(session({
+	cookieName: 'session',
+	secret: 'rcmscgsamfion81152627lolmamparohu,,loui',
+	activeDuration: 1500 * 60 * 1000
+}));
 
 app.use(stormpath.init(app, {
 	web: {
@@ -47,20 +53,15 @@ app.use(stormpath.init(app, {
 		},
 		logout: {
 			enabled: true,
-			uri: '/logout',
 			nextUri: '/'
 		}
 	},
 	postRegistrationHandler: function (account, req, res, next) {
-		account.addToGroup('https://api.stormpath.com/v1/groups/7TRKTb2bhnKW4ljtviA4c7', function(err, membership) {
-			console.log(membership);
-		});
-		console.log('The account\'s group is:', account.groups, ' and has just been registered!');
+		console.log('The account has just been registered!');
 		next();
 	},
 	postLoginHandler: function (account, req, res, next) {
-		console.log('Truc');
-		console.log('User:', account.email, 'just logged in!');
+		console.log('User:', account.email, 'just logged in! ');
 		next();
 	}
 }));
