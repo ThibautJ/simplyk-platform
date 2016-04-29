@@ -4,8 +4,8 @@ block vars
 
 
 block content
-      #map-section.container-fluid
-        .row
+      .container-fluid
+        .row.fill
           .col-md-7.no-side-padding
             #map.map
           #offers-list.col-md-5.no-side-padding
@@ -20,7 +20,9 @@ block content
                     a= val.intitule
                     p= 'Pour ' + val.nbBenevoles + ' bénévoles'
                   div.media-right.media-middle
-                    button.btn.btn-default(type='button' data-toggle="modal" data-target="#myModal") Informations
+                    .i.icon.icon-star.icon-2x.favorite
+                  div.media-right.media-middle
+                    button.btn.btn-default.media-object(type='button' data-toggle="modal" data-target="#myModal") Informations
                     #myModal.modal.fade(tabindex='-1', role='dialog')
                       .modal-dialog
                           .modal-content
@@ -40,16 +42,28 @@ block content
 
 block footscript
   script.
+    $( document ).ready(function() {
+      $('.favorite').hover(function(){
+        $(this).addClass('icon-spin');
+      }, function(){
+        $('.favorite').removeClass('icon-spin');
+      })
+    });
     function initMap(){
       function listStar(i){
         listElement = document.getElementById("offers-list").childNodes[0].childNodes[i];
-        listElement.className += ' starring';
+        $(listElement).addClass('starring');
         console.log(listElement);
       }
       function listUnstar(i){
         listElement = document.getElementById("offers-list").childNodes[0].childNodes[i];
-        listElement.classList.remove('starring');
+        $(listElement).removeClass('starring');
         console.log(listElement);
+      }
+      function openListInfos(i){
+        listElement = document.getElementById("offers-list").childNodes[0].childNodes[i];
+        listElement.childNodes[2].childNodes[0].click();
+        console.log(listElement.childNodes[2].childNodes[0]);
       }
       var mapDiv = document.getElementById('map');
       var map = new google.maps.Map(mapDiv, {
@@ -63,12 +77,14 @@ block footscript
       var markers = [];
       function attachInfoWindow(marker, infoWindow, opp, i){
         marker.addListener('click', function(){
-          infoWindow.open(map, marker);
+          openListInfos(i);
         });
         marker.addListener('mouseover', function(){
+          infoWindow.open(map, marker);
           listStar(i);
         });
         marker.addListener('mouseout', function(){
+          infoWindow.close();
           listUnstar(i);
         });
       };
