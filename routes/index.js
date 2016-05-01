@@ -17,7 +17,9 @@ var Opp = mongoose.model('Opp', new Schema({
 	nbBenevoles: Number,
 	date: Date,
 	lat: Number,
-	lon: Number
+	lon: Number,
+	mail: String,
+	favs: [String]//mails des utilisateurs qui ont mis l'opportunité en favori
 }));
 
 /* GET home page. */
@@ -53,7 +55,7 @@ router.get('/profile', stormpath.getUser, stormpath.loginRequired, function(req,
 	res.render('profile.jade', {session: req.session});
 });
 
-router.get('/addopp', stormpath.groupsRequired(['organism'], false), function(req, res){
+router.get('/addopp', /*stormpath.groupsRequired(['organism'], false),*/ function(req, res){
 	res.render('addopp.jade');
 });
 
@@ -64,17 +66,25 @@ router.post('/addopp', stormpath.getUser, function(req,res){
 		nbBenevoles: req.body.nbBenevoles,
 		date: req.body.date,
 		lat: req.body.lat,
-		lon: req.body.lon
+		lon: req.body.lon,
+		mail: req.user.email
 	});
 	opp.save(function(err){
 		if(err){
-			var err = 'Something bad happened! Try again!';
-			res.render('addopp.jade', {error: error})
+			var error = 'Something bad happened! Try again!';
+			res.render('addopp.jade', {error: err})
 		}
 		else{
 			res.redirect('/map');
 		}
 	})
 });
+
+router.post('/addfavopp', stormpath.getUser, function(req,res,next){
+	console.log(req.user.mail);
+	req.insert(req.user.mail);
+	res.end();
+	//user.customData.favopps.insert(req)
+})
 
 module.exports = router;

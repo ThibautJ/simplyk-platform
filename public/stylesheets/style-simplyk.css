@@ -72,7 +72,24 @@ body{
 }
 
 a{
-	color: #FF1CB5;
+	text-decoration: none;
+	color:#E8E52C;
+}
+
+a:hover{
+	text-decoration: none;
+}
+
+.firstColor{
+	color:#25A191;
+}
+
+.secondColor{
+	color:#E8E52C;
+}
+
+.thirdColor{
+	color:#FF1CB5;
 }
 
 .list-opportunity li:hover{

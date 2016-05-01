@@ -17,7 +17,7 @@ block content
                       img.media-object(src='images/clouds.jpg')
                   div.media-body
                     h4.media-heading= val.oName
-                    a= val.intitule
+                    a.firstColor= val.intitule
                     p= 'Pour ' + val.nbBenevoles + ' bénévoles'
                   div.media-right.media-middle
                     .i.icon.icon-star.icon-2x.favorite
@@ -32,12 +32,13 @@ block content
                               #myModalLabel.h4.modal-title= val.oName + ' - ' + val.intitule
                             .modal-body.my-modal-body
                               p= 'Date: '+ val.date
-                              p= 'Pour t' + val.nbBenevoles + ' bénévoles'
+                              p= 'Pour ' + val.nbBenevoles + ' bénévoles'
                               p= 'Latitude: '+ val.lat
-                              p= 'Lonitude: '+ val.lon
+                              p= 'Longitude: '+ val.lon
                             .modal-footer
                               button.btn.btn-default(type='button', data-dismiss='modal') Close
-                              button.btn.btn-primary.pinkow(type='button') Contactez
+                              button.btn.btn-primary.pinkow(type='button')
+                                a(href='mailto:'+val.mail+'?subject=Participation%20à%20:%20'+val.intitule) Contactez
 
 
 block footscript
@@ -47,7 +48,15 @@ block footscript
         $(this).addClass('icon-spin');
       }, function(){
         $('.favorite').removeClass('icon-spin');
-      })
+      });
+      $('.favorite').click(function(){
+        var thisStar = $(this).parents().parents();
+        var opports = !{JSON.stringify(opps)};
+        alert(opports);
+        /*$.post('addfavopp', thisStar.serialize()).done(function(){
+          alert(thisStar.serialize());
+        });*/
+      });
     });
     function initMap(){
       function listStar(i){
@@ -62,8 +71,8 @@ block footscript
       }
       function openListInfos(i){
         listElement = document.getElementById("offers-list").childNodes[0].childNodes[i];
-        listElement.childNodes[2].childNodes[0].click();
-        console.log(listElement.childNodes[2].childNodes[0]);
+        listElement.childNodes[3].childNodes[0].click();
+        console.log(listElement.childNodes[3].childNodes[0]);
       }
       var mapDiv = document.getElementById('map');
       var map = new google.maps.Map(mapDiv, {
