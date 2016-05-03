@@ -50,12 +50,10 @@ block footscript
         $('.favorite').removeClass('icon-spin');
       });
       $('.favorite').click(function(){
-        var thisStar = $(this).parents().parents();
-        var opports = !{JSON.stringify(opps)};
-        alert(opports);
-        /*$.post('addfavopp', thisStar.serialize()).done(function(){
-          alert(thisStar.serialize());
-        });*/
+        var orgName = $(this).parents().parents().children('.media-body').children('.media-heading').html();
+        var intitule = $(this).parents().parents().children('.media-body').children('a').html();
+        $.post('addfavopp', {orgName: orgName, intitule: intitule}).done(function(){
+        });
       });
     });
     function initMap(){

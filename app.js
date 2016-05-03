@@ -56,6 +56,9 @@ app.use(stormpath.init(app, {
 			nextUri: '/'
 		}
 	},
+	expand: {
+		customData: true,
+	},
 	postRegistrationHandler: function (account, req, res, next) {
 		console.log('The account has just been registered!');
 		next();

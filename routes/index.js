@@ -24,7 +24,7 @@ var Opp = mongoose.model('Opp', new Schema({
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('accueil.jade');
+	res.render('accueil.jade');
 });
 
 /* GET home page. */
@@ -52,7 +52,8 @@ router.get('/map', stormpath.getUser, stormpath.loginRequired, function(req, res
 });
 
 router.get('/profile', stormpath.getUser, stormpath.loginRequired, function(req,res){
-	res.render('profile.jade', {session: req.session});
+	console.log(req.user.customData);
+	res.render('profile.jade', {session: req.session, favs: req.user.customData.favopps});
 });
 
 router.get('/addopp', /*stormpath.groupsRequired(['organism'], false),*/ function(req, res){
@@ -80,11 +81,45 @@ router.post('/addopp', stormpath.getUser, function(req,res){
 	})
 });
 
-router.post('/addfavopp', stormpath.getUser, function(req,res,next){
-	console.log(req.user.mail);
-	req.insert(req.user.mail);
+router.post('/addfavopp', stormpath.loginRequired, stormpath.getUser, function(req,res){
+	console.log('orgName: ' + req.body.orgName + ' and intitule: ' + req.body.intitule);
+	Opp.findOne({'oName': req.body.orgName, 'intitule': req.body.intitule}, 'favs',function(err, opps){
+		if (err) return handleError(err);
+		//Create opps list
+		console.log('opps: '+opps + 'and opps.fav: ' + opps.favs);
+		opps.favs.addToSet(req.user.email);
+		opps.save(function(err){
+			if(err){
+				console(err);
+			}
+			else{
+			}
+		});
+	});
+	if(req.user.customData.favopps){
+		req.user.customData.favopps.push(req.body.orgName + ' ' + req.body.intitule);
+	}
+	else{
+		req.user.customData.favopps = [];
+		req.user.customData.favopps.push(req.body.orgName + ' ' + req.body.intitule);
+	}
+	req.user.customData.save(function (err) {
+		if (err) {
+			res.status(400).end('Oops!  There was an error: ' + err.userMessage);
+		}else{
+			console.log('Name was changed!');
+		}
+	});
+	console.log('before addfavapp');
+	console.log('out addfavapp');
+	console.log('out addfavapp');
 	res.end();
-	//user.customData.favopps.insert(req)
+});
+
+router.post('/add', stormpath.loginRequired, stormpath.getUser, function(req,res){
+	console.log('in post'+ req.orgName);
+	res.end();
+	console.log('out addfavapp');
 })
 
 module.exports = router;
