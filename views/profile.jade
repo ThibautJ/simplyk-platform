@@ -21,7 +21,7 @@ block content
             small
           |             
           li.list-group-item
-            | Âge: #{user.customData.age}
+            | Date de naissance: #{user.customData.birth}
             small
           |             
           li.list-group-item
@@ -61,7 +61,7 @@ block content
                                     .modal-footer
                                       button.btn.btn-default(type='button', data-dismiss='modal') Close
                                       button.btn.btn-primary.pinkow(type='button')
-                                          a(href='mailto:'+val+'?subject=Participation%20à%20:%20'+val) Contactez
+                                          a(href='mailto:'+val+'?subject=Participation%20à%20:%20'+val, target='_blank') Contactez
 
 block footscript
   script(src='javascripts/bootstrap.min.js')

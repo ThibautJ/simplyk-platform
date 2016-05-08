@@ -22,7 +22,16 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 //connect to mongo
-mongoose.connect('mongodb://tjaurou:Oeuf2poule@ds021999.mlab.com:21999/heroku_ggjmn8rl');
+mongoose.connect('mongodb://tjaurou:Oeuf2poule@ds021999.mlab.com:21999/heroku_ggjmn8rl?connectTimeOutMS=30000');
+
+var User = mongoose.model('User', new Schema({
+	id: ObjectId,
+	givenName: String,
+	surname: String,
+	email: String,
+	birth: Date,
+	favs: [String]//mails des utilisateurs qui ont mis l'opportunité en favori
+}));
 
 app.use(session({
 	cookieName: 'session',
@@ -60,11 +69,27 @@ app.use(stormpath.init(app, {
 		customData: true,
 	},
 	postRegistrationHandler: function (account, req, res, next) {
-		console.log('The account has just been registered!');
-		next();
+		var user = new User({
+			givenName: account.givenName,
+			surname: account.surname,
+			email: account.email,
+			birth: account.customData.birth
+		});
+		user.save(function(err){
+			if(err){
+				var error = 'Something bad happened! Try again!';
+				alert(error);
+				console.log(error);
+				next();
+			}
+			else{
+				console.log('The account has just been registered!');
+				next();
+		}
+		})
 	},
 	postLoginHandler: function (account, req, res, next) {
-		console.log('User:', account.email, 'just logged in! ');
+		console.log('User:', account.email, 'just logged in! ' + err);
 		next();
 	}
 }));

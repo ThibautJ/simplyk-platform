@@ -15,13 +15,24 @@ block content
                 small Que tu sois un citoyen ou un organisme en recherche de bénévoles, rejoins-nous !
             if error
               p.alert.alert-danger ERROR : #{error}
-        |       
         .row
           .col-md-4.col-md-offset-2
-            .page-header
-              h3 Connexion
-            a.btn.btn-default(href='login') On se connecte
+            .panel.panel-default
+              .panel-heading 
+                h2 Organisme
+              .panel-body
+                p.alert.alert-danger Tu es un organisme ? Tu recherches des bénévoles ? C'est ici !
+                h3 Connexion
+                a.btn.btn-default(href='http://organism.simplyk.org/login') On se connecte
+                h3 Créer un compte
+                a.btn.btn-default(href='http://organism.simplyk.org/register') Rentre dans l'aventure
           .col-md-4
-            .page-header
-              h3 Créer un compte
-            a.btn.btn-default(href='register') Rentre dans l'aventure
+            .panel.panel-default
+              .panel-heading 
+                h2 Bénévoles
+              .panel-body
+                p.alert.alert-danger Tu as envie d'aider autour de toi ? De faire de belles rencontres ? De passer des bons moments ? Tu es bienvenu !
+                h3 Connexion
+                a.btn.btn-default(href='login') On se connecte
+                h3 Créer un compte
+                a.btn.btn-default(href='register') Rentre dans l'aventure
