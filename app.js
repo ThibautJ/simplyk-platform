@@ -89,7 +89,7 @@ app.use(stormpath.init(app, {
 		})
 	},
 	postLoginHandler: function (account, req, res, next) {
-		console.log('User:', account.email, 'just logged in! ' + err);
+		console.log('User:', account.email, 'just logged in! ');
 		next();
 	}
 }));
