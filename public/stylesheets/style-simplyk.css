@@ -10,6 +10,15 @@ body{
 	width: 100vw;
 }
 
+.fill{
+	height: 100%;
+	min-height: 100%;
+}
+
+.fill-parent{
+	height: inherit;
+}
+
 .page{
 	padding-right: 0px;
 	padding-left: 0px;
@@ -19,10 +28,6 @@ body{
 #nav-me{
 	background-color: #FFFFff;
 	opacity: 100%;
-}
-
-.navbar-link a{
-	width: auto;	
 }
 
 #nav-me a{
@@ -35,11 +40,11 @@ body{
 }
 
 #map{
-	height: 87vh;
+	height: 90vh;
 }
 
 #map-section{
-	min-height: 90%;
+	height: 90%;
 }
 
 #offers-list{
@@ -67,7 +72,24 @@ body{
 }
 
 a{
-	color: #FF1CB5;
+	text-decoration: none;
+	color:#E8E52C;
+}
+
+a:hover{
+	text-decoration: none;
+}
+
+.firstColor{
+	color:#25A191;
+}
+
+.secondColor{
+	color:#E8E52C;
+}
+
+.thirdColor{
+	color:#FF1CB5;
 }
 
 .list-opportunity li:hover{
@@ -102,4 +124,8 @@ a{
 .label-danger {
 	color: #FF1CB5;
     background-color: #E8E52C;
+}
+
+.favorite {
+	color: #FF1CB5;
 }

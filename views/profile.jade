@@ -5,7 +5,7 @@ block vars
 block content
   #map-section.container-fluid
     .row
-      .col-md-6.col-md-offset-3
+      .col-md-4.col-md-offset-1
         .page-header
           h1
             | Mon profil 
@@ -21,9 +21,53 @@ block content
             small
           |             
           li.list-group-item
-            | Âge: #{user.customData.age}
+            | Date de naissance: #{user.customData.birth}
             small
           |             
           li.list-group-item
             | Adresse mail: #{user.email}
             small
+      .col-md-4.col-md-offset-2
+        .page-header
+          h1 Mes favoris
+        if favs
+          #offers-list.no-side-padding
+            ul.list-group.list-opportunity
+              each val in favs
+                li.list-group-item
+                  div.media-left.media-middle
+                    a(href='profile')
+                      img.media-object(src='images/clouds.jpg')
+                  div.media-body
+                    h4.media-heading= val
+                    a.firstColor= val
+                    p= 'Pour ' + val+ ' bénévoles'
+                  div.media-right.media-middle
+                    .i.icon.icon-star.icon-2x.favorite
+                  div.media-right.media-middle
+                    button.btn.btn-default.media-object(type='button' data-toggle="modal" data-target="#myModal") Informations
+                    #myModal.modal.fade(tabindex='-1', role='dialog')
+                          .modal-dialog
+                              .modal-content
+                                  .modal-header
+                                      button.close(type='button', data-dismiss='modal', aria-label='Close')
+                                          span(aria-hidden='true') &times;        
+                                        #myModalLabel.h4.modal-title= val + ' - ' + val
+                                    .modal-body.my-modal-body
+                                      p= 'Date: '+ val
+                                      p= 'Pour ' + val + ' bénévoles'
+                                      p= 'Latitude: '+ val
+                                      p= 'Longitude: '+ val
+                                    .modal-footer
+                                      button.btn.btn-default(type='button', data-dismiss='modal') Close
+                                      button.btn.btn-primary.pinkow(type='button')
+                                          a(href='mailto:'+val+'?subject=Participation%20à%20:%20'+val, target='_blank') Contactez
+
+block footscript
+  script(src='javascripts/bootstrap.min.js')
+  //Modal bootstrap
+  script(type='text/javascript').
+    $('#myModal').on('shown.bs.modal', function () {
+      $('#myInput').focus();
+    });
+
