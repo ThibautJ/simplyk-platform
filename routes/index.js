@@ -97,7 +97,19 @@ router.post('/addfavopp', stormpath.loginRequired, stormpath.getUser, function(r
 		});
 	});
 	if(req.user.customData.favopps){
-		req.user.customData.favopps.push(req.body.orgName + ' ' + req.body.intitule);
+		//On regarde si ce mandat est deja dans les favoris. Si il n'y est pas encore, on peut l'ajouter.
+		//Sinon, on supprime ce mandat de la liste des favoris.
+		if(req.user.customData.favopps.indexOf(req.body.orgName + ' ' + req.body.intitule)==-1){
+			//console.log("le mandat n'est pas encore dans les favoris");
+			req.user.customData.favopps.push(req.body.orgName + ' ' + req.body.intitule);
+		}
+		else{
+			//console.log("le mandat est deja dans les favoris : on le supprime");
+			//on récupère l'index du mandat dans le tableau de favoris
+			var index=req.user.customData.favopps.indexOf(req.body.orgName + ' ' + req.body.intitule)
+			req.user.customData.favopps.splice(index,1)
+		}
+		
 	}
 	else{
 		req.user.customData.favopps = [];
