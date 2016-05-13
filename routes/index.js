@@ -45,7 +45,7 @@ router.get('/map', stormpath.getUser, stormpath.loginRequired, function(req, res
 			res.render('map.jade', {session: req.session});
 		}
 		//Create opps list
-		else{
+		else{			
 			res.render('map.jade', {opps: opps, session: req.session});
 		}
 	})
@@ -82,7 +82,18 @@ router.post('/addopp', stormpath.getUser, function(req,res){
 });
 
 router.post('/addfavopp', stormpath.loginRequired, stormpath.getUser, function(req,res){
-	console.log('orgName: ' + req.body.orgName + ' and intitule: ' + req.body.intitule);
+	//On utilise des objets javascripts à la place d'un tableau pour stocker les favoris.
+	//On peut alors utiliser l'identifiant de l'opp comme key de l'objet javascript.
+	//Conversion d'un array en objet {}
+	if(Array.isArray(req.user.customData.favopps)){
+		req.user.customData.favopps = {};
+	}
+
+	//identifiant de l'opp sur laquelle on a cliqué
+	var id_new_favorite=req.body.identifiant;
+	//contenu de cette opp, aussi sous la forme d'un objet javascript
+	var new_farovite={orgName:req.body.orgName, intitule:req.body.intitule, nbBenevoles:req.body.nbBenevoles};
+
 	Opp.findOne({'oName': req.body.orgName, 'intitule': req.body.intitule}, 'favs',function(err, opps){
 		if (err) return handleError(err);
 		//Create opps list
@@ -97,24 +108,24 @@ router.post('/addfavopp', stormpath.loginRequired, stormpath.getUser, function(r
 		});
 	});
 	if(req.user.customData.favopps){
-		//On regarde si ce mandat est deja dans les favoris. Si il n'y est pas encore, on peut l'ajouter.
-		//Sinon, on supprime ce mandat de la liste des favoris.
-		if(req.user.customData.favopps.indexOf(req.body.orgName + ' ' + req.body.intitule)==-1){
-			//console.log("le mandat n'est pas encore dans les favoris");
-			req.user.customData.favopps.push(req.body.orgName + ' ' + req.body.intitule);
+		//On regarde si ce mandat est deja dans les favoris.
+		//Si le mandat est déjà dans les favoris, on le supprime.
+		if(req.user.customData.favopps[id_new_favorite]){
+			console.log("le mandat est deja dans les favoris : on le supprime");
+			delete req.user.customData.favopps[id_new_favorite];
 		}
 		else{
-			//console.log("le mandat est deja dans les favoris : on le supprime");
-			//on récupère l'index du mandat dans le tableau de favoris
-			var index=req.user.customData.favopps.indexOf(req.body.orgName + ' ' + req.body.intitule)
-			req.user.customData.favopps.splice(index,1)
+			console.log("le mandat n'est pas encore dans les favoris : on le rajoute");
+			req.user.customData.favopps[id_new_favorite]=new_farovite;
 		}
 		
 	}
 	else{
-		req.user.customData.favopps = [];
-		req.user.customData.favopps.push(req.body.orgName + ' ' + req.body.intitule);
+		console.log("Il n'y avait pas encore de favoris");
+		req.user.customData.favopps = {};
+		req.user.customData.favopps[id_new_favorite]=new_farovite;
 	}
+	console.log(req.user.customData.favopps);
 	req.user.customData.save(function (err) {
 		if (err) {
 			res.status(400).end('Oops!  There was an error: ' + err.userMessage);
@@ -122,8 +133,8 @@ router.post('/addfavopp', stormpath.loginRequired, stormpath.getUser, function(r
 			console.log('Name was changed!');
 		}
 	});
-	console.log('before addfavapp');
-	console.log('out addfavapp');
+	///console.log('before addfavapp');
+	//console.log('out addfavapp');
 	console.log('out addfavapp');
 	res.end();
 });

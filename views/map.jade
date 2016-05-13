@@ -19,6 +19,8 @@ block content
                     h4.media-heading= val.oName
                     a.firstColor= val.intitule
                     p= 'Pour ' + val.nbBenevoles + ' bénévoles'
+                    #identifiant(style="display:none")
+                      p= val._id
                   div.media-right.media-middle
                     .i.icon.icon-star.icon-2x.favorite
                   div.media-right.media-middle
@@ -44,6 +46,7 @@ block content
 block footscript
   script.
     $( document ).ready(function() {
+      //$('#identifiant').css("display","none");
       $('.favorite').hover(function(){
         $(this).addClass('icon-spin');
       }, function(){
@@ -52,8 +55,10 @@ block footscript
       $('.favorite').click(function(){
         var orgName = $(this).parents().parents().children('.media-body').children('.media-heading').html();
         var intitule = $(this).parents().parents().children('.media-body').children('a').html();
-        $.post('addfavopp', {orgName: orgName, intitule: intitule}).done(function(){
-        });
+        var nbBenevoles = $(this).parents().parents().children('.media-body').children('p').html();
+        var identifiant = $(this).parents().parents().children('.media-body').children('#identifiant').children('p').html();
+        //On utilise l'identifiant de l'opp dans mongoDB pour traiter l'ajout de ce favori dans /addfavopp
+        $.post('addfavopp', {orgName: orgName, intitule: intitule, nbBenevoles: nbBenevoles, identifiant:identifiant}).done(function(){});
       });
     });
     function initMap(){
