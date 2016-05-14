@@ -52,7 +52,7 @@ router.get('/map', stormpath.getUser, stormpath.loginRequired, function(req, res
 });
 
 router.get('/profile', stormpath.getUser, stormpath.loginRequired, function(req,res){
-	console.log(req.user.customData);
+	console.log(req.user.customData.favopps);
 	res.render('profile.jade', {session: req.session, favs: req.user.customData.favopps});
 });
 
@@ -92,7 +92,9 @@ router.post('/addfavopp', stormpath.loginRequired, stormpath.getUser, function(r
 	//identifiant de l'opp sur laquelle on a cliqué
 	var id_new_favorite=req.body.identifiant;
 	//contenu de cette opp, aussi sous la forme d'un objet javascript
-	var new_farovite={orgName:req.body.orgName, intitule:req.body.intitule, nbBenevoles:req.body.nbBenevoles};
+	//on lui rajoute l'identifiant. C'est pratique pour supprimer une opp depuis la page de favoris.
+	//Mais il y a peut-être une meilleure façon de faire.
+	var new_farovite={orgName:req.body.orgName, intitule:req.body.intitule, nbBenevoles:req.body.nbBenevoles, identifiant:id_new_favorite};
 
 	Opp.findOne({'oName': req.body.orgName, 'intitule': req.body.intitule}, 'favs',function(err, opps){
 		if (err) return handleError(err);
