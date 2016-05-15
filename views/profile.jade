@@ -39,9 +39,11 @@ block content
                     a(href='profile')
                       img.media-object(src='images/clouds.jpg')
                   div.media-body
-                    h4.media-heading= val
-                    a.firstColor= val
-                    p= 'Pour ' + val+ ' bénévoles'
+                    h4.media-heading= val.orgName
+                    a.firstColor= val.intitule
+                    p= val.nbBenevoles
+                    #identifiant(style="display:none")
+                      p= val.identifiant
                   div.media-right.media-middle
                     .i.icon.icon-star.icon-2x.favorite
                   div.media-right.media-middle
@@ -64,6 +66,24 @@ block content
                                           a(href='mailto:'+val+'?subject=Participation%20à%20:%20'+val, target='_blank') Contactez
 
 block footscript
+  script.
+    $(document).ready(function() {
+      $('.favorite').hover(function(){
+        $(this).addClass('icon-spin');
+      }, function(){
+        $('.favorite').removeClass('icon-spin');
+      });
+      $('.favorite').click(function(){
+        var orgName = $(this).parents().parents().children('.media-body').children('.media-heading').html();
+        var intitule = $(this).parents().parents().children('.media-body').children('a').html();
+        var nbBenevoles = $(this).parents().parents().children('.media-body').children('p').html();
+        var identifiant = $(this).parents().parents().children('.media-body').children('#identifiant').children('p').html();
+        //On applique la même procédure que si on ajoutait (ou retirait) un favori depuis la map. Il sera retiré.
+        $.post('addfavopp', {orgName: orgName, intitule: intitule, nbBenevoles: nbBenevoles, identifiant:identifiant}).done(function(){});
+        //On retire ce favori de l'affichage de la liste
+        $(this).parent().parent().hide();
+      });
+    });
   script(src='javascripts/bootstrap.min.js')
   //Modal bootstrap
   script(type='text/javascript').
