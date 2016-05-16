@@ -40,6 +40,15 @@ app.use(session({
 }));
 
 app.use(stormpath.init(app, {
+	// WARNING: USING THIS ONLY DURING TEST PROCESS, DON'T PUT IT IN PRODUCTION IN HEROKU
+	apiKey: {
+		id: '6C0J0VMJN734THNPB33DACREI',
+		secret: 'wERpdqEeaL6jMqfYHiNKr1rV3TecnxYbWnA5akFYYmw'
+	},
+	application: {
+		href: `https://api.stormpath.com/v1/applications/7f5aOQIRSs7fuCcmo6aKS0`
+	},
+	//WARNING END
 	web: {
 		register: {
 			form: {
