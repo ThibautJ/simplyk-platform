@@ -22,7 +22,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 //connect to mongo
-mongoose.connect('mongodb://tjaurou:Oeuf2poule@ds021999.mlab.com:21999/heroku_ggjmn8rl?connectTimeOutMS=30000');
+mongoose.connect('mongodb://'+process.env.MONGODB_CRED);
 
 var User = mongoose.model('User', new Schema({
 	id: ObjectId,
