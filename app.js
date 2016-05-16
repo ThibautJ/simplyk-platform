@@ -14,7 +14,6 @@ var users = require('./routes/users');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 
-
 var app = express();
 
 // view engine setup
@@ -24,15 +23,6 @@ app.set('view engine', 'jade');
 //connect to mongo
 mongoose.connect('mongodb://'+process.env.MONGODB_CRED);
 
-var User = mongoose.model('User', new Schema({
-	id: ObjectId,
-	givenName: String,
-	surname: String,
-	email: String,
-	birth: Date,
-	favs: [String]//mails des utilisateurs qui ont mis l'opportunité en favori
-}));
-
 app.use(session({
 	cookieName: 'session',
 	secret: 'rcmscgsamfion81152627lolmamparohu,,loui',
@@ -40,15 +30,6 @@ app.use(session({
 }));
 
 app.use(stormpath.init(app, {
-	// WARNING: USING THIS ONLY DURING TEST PROCESS, DON'T PUT IT IN PRODUCTION IN HEROKU
-	apiKey: {
-		id: '6C0J0VMJN734THNPB33DACREI',
-		secret: 'wERpdqEeaL6jMqfYHiNKr1rV3TecnxYbWnA5akFYYmw'
-	},
-	application: {
-		href: `https://api.stormpath.com/v1/applications/7f5aOQIRSs7fuCcmo6aKS0`
-	},
-	//WARNING END
 	web: {
 		register: {
 			form: {
@@ -76,26 +57,6 @@ app.use(stormpath.init(app, {
 	},
 	expand: {
 		customData: true,
-	},
-	postRegistrationHandler: function (account, req, res, next) {
-		var user = new User({
-			givenName: account.givenName,
-			surname: account.surname,
-			email: account.email,
-			birth: account.customData.birth
-		});
-		user.save(function(err){
-			if(err){
-				var error = 'Something bad happened! Try again!';
-				alert(error);
-				console.log(error);
-				next();
-			}
-			else{
-				console.log('The account has just been registered!');
-				next();
-		}
-		})
 	},
 	postLoginHandler: function (account, req, res, next) {
 		console.log('User:', account.email, 'just logged in! ');
