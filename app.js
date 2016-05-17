@@ -52,22 +52,20 @@ app.use(stormpath.init(app, {
 	web: {
 		register: {
 			form: {
-				fieldOrder: ['email', 'password' ]
-			}
-		},
-		login: {
-			nextUri: "/map",
-			form: {
 				fields: {
-					login: {
-						label: 'Your Username or Mail',
-						placeholder: 'email@trustyapp.com'
-					},
-					password: {
-						label: 'Your password'
+					birth: {
+						enabled: true,
+						label: 'Birthdate',
+						name:'birth',
+						required: false,
+						type: 'date'
 					}
 				}
 			}
+		},
+		login: {
+			enabled: true,
+			nextUri: "/map"
 		},
 		logout: {
 			enabled: true,
@@ -86,20 +84,16 @@ app.use(stormpath.init(app, {
 		});
 		user.save(function(err){
 			if(err){
+				console.log(err);
 				var error = 'Something bad happened! Try again!';
-				alert(error);
 				console.log(error);
 				next();
 			}
 			else{
 				console.log('The account has just been registered!');
 				next();
-		}
+			}
 		})
-	},
-	postLoginHandler: function (account, req, res, next) {
-		console.log('User:', account.email, 'just logged in! ');
-		next();
 	}
 }));
 

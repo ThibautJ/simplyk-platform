@@ -1,3 +1,4 @@
+NEW DOCUMENT
 {
 	Opp:{ // Volunteering opportunity
 		_id: objectId,
@@ -13,7 +14,7 @@
 		nbVol: Double
 	}
 }
-
+NEW DOCUMENT
 {
 	User:{ // People who volunteer
 		_id: objectId,
@@ -30,7 +31,7 @@
 		]
 	}
 }
-
+NEW DOCUMENT
 {
 	Admin:{ // People who follow a squad of users (hours, opportunities done)
 		_id: objectId,
@@ -38,7 +39,7 @@
 		name: String,
 	}
 }
-
+NEW DOCUMENT
 {
 	Organism:{ // Organism who need volunteers and publish opportunities then
 		_id: objectId,
@@ -49,7 +50,7 @@
 		mail: String
 	}
 }
-
+NEW DOCUMENT
 {
 	Squad: { // Group of users who are followed by an admin (for example, a college)
 		_id: objectId,
