@@ -1,0 +1,60 @@
+{
+	Opp:{ // Volunteering opportunity
+		_id: objectId,
+		intitule: String,
+		users: {
+			user_id: objectId,
+			status: String //If a user has been subscribed, confirmed, etc...
+		},
+		address: String,
+		time: Date,
+		lon: Double,
+		lat: Double,
+		nbVol: Double
+	}
+}
+
+{
+	User:{ // People who volunteer
+		_id: objectId,
+		squad_id: objectId,
+		lName: String,
+		fName: String,
+		birthdate: Date,
+		mail: String,
+		opps: [
+			{
+				opp_id: objectId,
+				status: String
+			}
+		]
+	}
+}
+
+{
+	Admin:{ // People who follow a squad of users (hours, opportunities done)
+		_id: objectId,
+		squad_id: objectId,
+		name: String,
+	}
+}
+
+{
+	Organism:{ // Organism who need volunteers and publish opportunities then
+		_id: objectId,
+		opps_id:[objectId],
+		name: String,
+		c_name: String,
+		phone: Double,
+		mail: String
+	}
+}
+
+{
+	Squad: { // Group of users who are followed by an admin (for example, a college)
+		_id: objectId,
+		admin_id: objectId,
+		users_id: [],
+		name: String,
+	}
+}
