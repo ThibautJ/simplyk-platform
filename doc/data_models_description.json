@@ -18,7 +18,7 @@ NEW DOCUMENT
 {
 	User:{ // People who volunteer
 		_id: objectId,
-		squad_id: objectId,
+		squadId: objectId,
 		lName: String,
 		fName: String,
 		birthdate: Date,
@@ -35,7 +35,7 @@ NEW DOCUMENT
 {
 	Admin:{ // People who follow a squad of users (hours, opportunities done)
 		_id: objectId,
-		squad_id: objectId,
+		squadId: objectId,
 		name: String,
 	}
 }
@@ -43,9 +43,9 @@ NEW DOCUMENT
 {
 	Organism:{ // Organism who need volunteers and publish opportunities then
 		_id: objectId,
-		opps_id:[objectId],
+		oppsId:[objectId],
 		name: String,
-		c_name: String,
+		cName: String,
 		phone: Double,
 		mail: String
 	}
@@ -54,8 +54,8 @@ NEW DOCUMENT
 {
 	Squad: { // Group of users who are followed by an admin (for example, a college)
 		_id: objectId,
-		admin_id: objectId,
-		users_id: [],
+		adminId: objectId,
+		usersId: [],
 		name: String,
 	}
 }
