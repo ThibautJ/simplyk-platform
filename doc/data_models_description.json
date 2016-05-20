@@ -3,12 +3,12 @@ NEW DOCUMENT
 	Opp:{ // Volunteering opportunity
 		_id: objectId,
 		intitule: String,
-		users: {
+		users: []{
 			user_id: objectId,
 			status: String //If a user has been subscribed, confirmed, etc...
 		},
 		address: String,
-		time: Date,
+		date: Date,
 		lon: Double,
 		lat: Double,
 		nbVol: Double
