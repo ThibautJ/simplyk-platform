@@ -28,7 +28,8 @@ NEW DOCUMENT
 				opp_id: objectId,
 				status: String
 			}
-		]
+		],
+		squad_id: objectId
 	}
 }
 NEW DOCUMENT
@@ -55,7 +56,6 @@ NEW DOCUMENT
 	Squad: { // Group of users who are followed by an admin (for example, a college)
 		_id: objectId,
 		adminId: objectId,
-		usersId: [],
 		name: String,
 	}
 }
