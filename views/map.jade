@@ -22,7 +22,10 @@ block content
                     #identifiant(style="display:none")
                       p= val._id
                   div.media-right.media-middle
-                    .i.icon.icon-star.icon-2x.favorite
+                    if val.users.indexOf(user.email)!=-1
+                      .i.icon.icon-star.icon-2x.favorite
+                    else
+                      .i.icon.icon-star.icon-2x.favorite.white
                   div.media-right.media-middle
                     button.btn.btn-default.media-object(type='button' data-toggle="modal" data-target="#myModal") Informations
                     #myModal.modal.fade(tabindex='-1', role='dialog')
