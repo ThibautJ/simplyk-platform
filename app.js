@@ -26,12 +26,12 @@ mongoose.connect('mongodb://tjaurou:Oeuf2poule@ds021999.mlab.com:21999/heroku_gg
 
 var User = mongoose.model('User', new Schema({
 	id: ObjectId,
-	givenName: String,
-	surname: String,
+	fName: String,
+	lname: String,
 	email: String,
-	birth: Date,
-	favs: [String]//mails des utilisateurs qui ont mis l'opportunité en favori
+	birth: Date
 }));
+
 
 app.use(session({
 	cookieName: 'session',
@@ -75,25 +75,38 @@ app.use(stormpath.init(app, {
 	expand: {
 		customData: true,
 	},
-	postRegistrationHandler: function (account, req, res, next) {
+	preRegistrationHandler: function (formData, req, res, next) {
 		var user = new User({
-			givenName: account.givenName,
-			surname: account.surname,
-			email: account.email,
-			birth: account.customData.birth
+			fname: formData.givenName,
+			lname: formData.surname,
+			email: formData.email,
+			birth: formData.birth
 		});
 		user.save(function(err){
 			if(err){
-				console.log(err);
-				var error = 'Something bad happened! Try again!';
-				console.log(error);
-				next();
+				var error = 'Something bad happened! Try again! Click previous !';
+				console.log('@ user.save : '+err);
+				res.json({error: error});
 			}
 			else{
-				console.log('The account has just been registered!');
-				next();
+				User.findOne({'lname': formData.surname, 'email': formData.email}, 'id', function(err, user){
+					if(err){
+						var error = 'Something bad happened! Try again! Click previous !';
+						console.log('@ user.findone : '+err);
+						res.json({error: error + '    ' + err});
+					}
+					else{
+						res.user_id = user._id;
+						console.log('The formData has just been registered! and user.id = ' + user._id);
+						next();
+					}
+				})
 			}
 		})
+	},
+	postRegistrationHandler: function(account, req, res, next){
+		account.customData.id = req.user_id;
+		next();
 	}
 }));
 

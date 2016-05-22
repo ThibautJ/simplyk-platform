@@ -19,7 +19,10 @@ var Opp = mongoose.model('Opp', new Schema({
 	lat: Number,
 	lon: Number,
 	mail: String,
-	favs: [String]//mails des utilisateurs qui ont mis l'opportunité en favori
+	users: [{
+		id: { type: Schema.Types.ObjectId, ref: 'Story' },
+		status: String
+	}]//mails des utilisateurs qui ont mis l'opportunité en favori
 }));
 
 /* GET home page. */
@@ -46,40 +49,16 @@ router.get('/map', stormpath.getUser, stormpath.loginRequired, function(req, res
 		}
 		//Create opps list
 		else{			
-			res.render('map.jade', {opps: opps, session: req.session});
+			res.render('map.jade', {opps: opps, session: req.session, user: req.user});
 		}
 	})
 });
 
 router.get('/profile', stormpath.getUser, stormpath.loginRequired, function(req,res){
 	console.log(req.user.customData.favopps);
-	res.render('profile.jade', {session: req.session, favs: req.user.customData.favopps});
+	res.render('profile.jade', {session: req.session/*, favs: req.user.customData.favopps*/});
 });
 
-router.get('/addopp', /*stormpath.groupsRequired(['organism'], false),*/ function(req, res){
-	res.render('addopp.jade');
-});
-
-router.post('/addopp', stormpath.getUser, function(req,res){
-	var opp = new Opp({
-		intitule: req.body.intitule,
-		oName: req.user.fullName,
-		nbBenevoles: req.body.nbBenevoles,
-		date: req.body.date,
-		lat: req.body.lat,
-		lon: req.body.lon,
-		mail: req.user.email
-	});
-	opp.save(function(err){
-		if(err){
-			var error = 'Something bad happened! Try again!';
-			res.render('addopp.jade', {error: err})
-		}
-		else{
-			res.redirect('/map');
-		}
-	})
-});
 
 router.post('/addfavopp', stormpath.loginRequired, stormpath.getUser, function(req,res){
 	//On utilise des objets javascripts à la place d'un tableau pour stocker les favoris.
@@ -96,7 +75,7 @@ router.post('/addfavopp', stormpath.loginRequired, stormpath.getUser, function(r
 	//Mais il y a peut-être une meilleure façon de faire.
 	var new_farovite={orgName:req.body.orgName, intitule:req.body.intitule, nbBenevoles:req.body.nbBenevoles, identifiant:id_new_favorite};
 
-	Opp.findOne({'oName': req.body.orgName, 'intitule': req.body.intitule}, 'favs',function(err, opps){
+	/*Opp.findOne({'oName': req.body.orgName, 'intitule': req.body.intitule}, 'favs',function(err, opps){
 		if (err) return handleError(err);
 		//Create opps list
 		console.log('opps: '+opps + 'and opps.fav: ' + opps.favs);
@@ -108,7 +87,7 @@ router.post('/addfavopp', stormpath.loginRequired, stormpath.getUser, function(r
 			else{
 			}
 		});
-	});
+	});*/
 	if(req.user.customData.favopps){
 		//On regarde si ce mandat est deja dans les favoris.
 		//Si le mandat est déjà dans les favoris, on le supprime.
@@ -141,10 +120,6 @@ router.post('/addfavopp', stormpath.loginRequired, stormpath.getUser, function(r
 	res.end();
 });
 
-router.post('/add', stormpath.loginRequired, stormpath.getUser, function(req,res){
-	console.log('in post'+ req.orgName);
-	res.end();
-	console.log('out addfavapp');
-})
+
 
 module.exports = router;
