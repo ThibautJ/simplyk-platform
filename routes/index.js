@@ -56,66 +56,34 @@ router.get('/map', stormpath.getUser, stormpath.loginRequired, function(req, res
 
 router.get('/profile', stormpath.getUser, stormpath.loginRequired, function(req,res){
 	console.log(req.user.customData.favopps);
-	res.render('profile.jade', {session: req.session/*, favs: req.user.customData.favopps*/});
+res.render('profile.jade', {session: req.session/*, favs: req.user.customData.favopps*/});
 });
 
 
-router.post('/addfavopp', stormpath.loginRequired, stormpath.getUser, function(req,res){
-	//On utilise des objets javascripts à la place d'un tableau pour stocker les favoris.
-	//On peut alors utiliser l'identifiant de l'opp comme key de l'objet javascript.
-	//Conversion d'un array en objet {}
-	if(Array.isArray(req.user.customData.favopps)){
-		req.user.customData.favopps = {};
-	}
-
+router.post('/subscribe', stormpath.loginRequired, stormpath.getUser, function(req,res){
 	//identifiant de l'opp sur laquelle on a cliqué
 	var id_new_favorite=req.body.identifiant;
-	//contenu de cette opp, aussi sous la forme d'un objet javascript
-	//on lui rajoute l'identifiant. C'est pratique pour supprimer une opp depuis la page de favoris.
-	//Mais il y a peut-être une meilleure façon de faire.
-	var new_farovite={orgName:req.body.orgName, intitule:req.body.intitule, nbBenevoles:req.body.nbBenevoles, identifiant:id_new_favorite};
-
-	/*Opp.findOne({'oName': req.body.orgName, 'intitule': req.body.intitule}, 'favs',function(err, opps){
+	//Search opp in DB
+	Opp.findById(id_new_favorite, function(err, opp){
 		if (err) return handleError(err);
 		//Create opps list
-		console.log('opps: '+opps + 'and opps.fav: ' + opps.favs);
-		opps.favs.addToSet(req.user.email);
-		opps.save(function(err){
-			if(err){
-				console(err);
-			}
-			else{
-			}
-		});
-	});*/
-	if(req.user.customData.favopps){
-		//On regarde si ce mandat est deja dans les favoris.
-		//Si le mandat est déjà dans les favoris, on le supprime.
-		if(req.user.customData.favopps[id_new_favorite]){
-			console.log("le mandat est deja dans les favoris : on le supprime");
-			delete req.user.customData.favopps[id_new_favorite];
+		console.log('This opp will be added to favorite: '+ opp + ' with user_id ' + req.user.customData.id);
+		//If the user has already subscribe to this opp
+		if (opp.users !== req.user.customData.id){
+			console.log('The user has already subscribed to this opp');
 		}
 		else{
-			console.log("le mandat n'est pas encore dans les favoris : on le rajoute");
-			req.user.customData.favopps[id_new_favorite]=new_farovite;
-		}
-		
-	}
-	else{
-		console.log("Il n'y avait pas encore de favoris");
-		req.user.customData.favopps = {};
-		req.user.customData.favopps[id_new_favorite]=new_farovite;
-	}
-	console.log(req.user.customData.favopps);
-	req.user.customData.save(function (err) {
-		if (err) {
-			res.status(400).end('Oops!  There was an error: ' + err.userMessage);
-		}else{
-			console.log('Name was changed!');
+			console.log('The user has not yet subscribed to this opp');
+			opp.users.addToSet(req.user.customData.id);
+			opp.save(function(err){
+				if(err){
+					console(err);
+				}
+				else{
+				}
+			});
 		}
 	});
-	///console.log('before addfavapp');
-	//console.log('out addfavapp');
 	console.log('out addfavapp');
 	res.end();
 });

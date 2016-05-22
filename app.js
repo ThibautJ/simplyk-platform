@@ -24,7 +24,7 @@ app.set('view engine', 'jade');
 //connect to mongo
 mongoose.connect('mongodb://tjaurou:Oeuf2poule@ds021999.mlab.com:21999/heroku_ggjmn8rl?connectTimeOutMS=30000');
 
-var User = mongoose.model('User', new Schema({
+var User = mongoose.model('Users', new Schema({
 	id: ObjectId,
 	fName: String,
 	lname: String,
@@ -96,7 +96,7 @@ app.use(stormpath.init(app, {
 						res.json({error: error + '    ' + err});
 					}
 					else{
-						res.user_id = user._id;
+						req.session.user_id = user._id;
 						console.log('The formData has just been registered! and user.id = ' + user._id);
 						next();
 					}
@@ -105,7 +105,9 @@ app.use(stormpath.init(app, {
 		})
 	},
 	postRegistrationHandler: function(account, req, res, next){
-		account.customData.id = req.user_id;
+		console.log('In postregistration, user.id = ' + req.session.user_id);
+		account.customData.id = req.session.user_id;
+		account.customData.save();
 		next();
 	}
 }));
