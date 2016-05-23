@@ -13,6 +13,7 @@ var users = require('./routes/users');
 
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
+var User = require('../models/user_model.js');
 
 
 var app = express();
@@ -23,14 +24,6 @@ app.set('view engine', 'jade');
 
 //connect to mongo
 mongoose.connect('mongodb://tjaurou:Oeuf2poule@ds021999.mlab.com:21999/heroku_ggjmn8rl?connectTimeOutMS=30000');
-
-var User = mongoose.model('Users', new Schema({
-	id: ObjectId,
-	fName: String,
-	lname: String,
-	email: String,
-	birth: Date
-}));
 
 
 app.use(session({

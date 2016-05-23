@@ -6,24 +6,10 @@ var stormpathGroupsRequired = require('../middlewares/stormpathGroupsRequired').
 
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
+var Opp = require('../models/opp_model.js');
 
 var app = express();
 
-//Opportunity schema creation
-var Opp = mongoose.model('Opp', new Schema({
-	id: ObjectId,
-	intitule: String,
-	oName: String,
-	nbBenevoles: Number,
-	date: Date,
-	lat: Number,
-	lon: Number,
-	mail: String,
-	users: [{
-		id: { type: Schema.Types.ObjectId, ref: 'Story' },
-		status: String
-	}]//mails des utilisateurs qui ont mis l'opportunité en favori
-}));
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -45,13 +31,13 @@ router.get('/map', stormpath.getUser, stormpath.loginRequired, function(req, res
 	Opp.find({}, function(err, opps){
 		if(err){
 			console.log(err);
-			res.render('map.jade', {session: req.session});
+			res.render('map.jade', {session: req.session, error: error});
 		}
 		//Create opps list
 		else{			
 			res.render('map.jade', {opps: opps, session: req.session, user: req.user});
 		}
-	})
+	});
 });
 
 router.get('/profile', stormpath.getUser, stormpath.loginRequired, function(req,res){

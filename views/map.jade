@@ -10,6 +10,8 @@ block content
             #map.map
           #offers-list.col-md-5.no-side-padding
             ul.list-group.list-opportunity
+              if error
+                p.alert.alert-danger #{error}
               each val, index in opps
                 li.list-group-item
                   div.media-left.media-middle
@@ -22,8 +24,6 @@ block content
                     #identifiant(style="display:none")
                       p= val._id
                   div.media-right.media-middle
-                    button.btn.btn-default.media-object.subscribe-button(type='button' data-toggle="modal" data-target="#myModal") S'inscrire
-                  div.media-right.media-middle
                     button.btn.btn-default.media-object(type='button' data-toggle="modal" data-target="#myModal") Informations
                     #myModal.modal.fade(tabindex='-1', role='dialog')
                       .modal-dialog
@@ -33,18 +33,27 @@ block content
                                 span(aria-hidden='true') &times;        
                               #myModalLabel.h4.modal-title= val.oName + ' - ' + val.intitule
                             .modal-body.my-modal-body
+                              p= val
                               p= 'Date: '+ val.date
                               p= 'Pour ' + val.nbBenevoles + ' bénévoles'
                               p= 'Adresse: '+ val.address
                             .modal-footer
-                              button.btn.btn-default(type='button', data-dismiss='modal') Close
+                              button.btn.btn-default(type='button', data-dismiss='modal') Fermer
+                              #subscribe.button.btn.btn-default.pinkow(type='button', data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample") S'inscrire
                               button.btn.btn-primary.pinkow(type='button')
                                 a(href='mailto:'+val.mail+'?subject=Participation%20à%20:%20'+val.intitule, target='_blank') Contactez
+                              #collapseExample.div.collapse.tp-15
+                                div.well Es-tu sûr de vouloir t'inscrire ? <br> Ton aide sera très appréciée ! L'organisme va en être informé et confirmera ta participation. Tu peux aussi le contacter directement grâce au bouton 'S'inscrire' ci-dessus !<br> <br>
+                                  button.btn.btn-primary.pinkow.subscribe-button(type='button', onclick="location.href='profile';") Oui
+                                  button.btn.btn-primary.pinkow(type='button' data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample") Non
 
 
 block footscript
   script.
     $( document ).ready(function() {
+      $('.subscribe').click(function(){
+
+      });
       $('.subscribe-button').click(function(){
         var identifiant = $(this).parents().parents().children('.media-body').children('#identifiant').children('p').html();
         //On utilise l'identifiant de l'opp dans mongoDB pour traiter l'ajout de ce favori dans /addfavopp
