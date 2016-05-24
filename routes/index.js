@@ -64,7 +64,7 @@ router.post('/subscribe', stormpath.loginRequired, stormpath.getUser, function(r
 		//Create opps list
 		console.log('This opp will be added to favorite: '+ opp + ' with user_id ' + req.user.customData.id);
 		//If the user has already subscribe to this opp
-		if (opp.users !== req.user.customData.id){
+		if (opp.users.indexOf(req.user.customData.id) !== -1){
 			console.log('The user has already subscribed to this opp');
 		}
 		else{
@@ -75,6 +75,7 @@ router.post('/subscribe', stormpath.loginRequired, stormpath.getUser, function(r
 					console(err);
 				}
 				else{
+					console.log('New subscribers array : ' + opp.users);
 				}
 			});
 		}

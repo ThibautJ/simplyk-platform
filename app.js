@@ -82,15 +82,16 @@ app.use(stormpath.init(app, {
 				res.json({error: error});
 			}
 			else{
-				User.findOne({'lname': formData.surname, 'email': formData.email}, 'id', function(err, user){
+				User.findOne({'lname': formData.surname, 'email': formData.email}, 'id', function(err, newuser){
 					if(err){
 						var error = 'Something bad happened! Try again! Click previous !';
 						console.log('@ user.findone : '+err);
 						res.json({error: error + '    ' + err});
 					}
 					else{
-						req.session.user_id = user._id;
-						console.log('The formData has just been registered! and user.id = ' + user._id);
+						console.log('User found : ' + newuser)
+						req.session.user_id = newuser._id;
+						console.log('The formData has just been registered! and newuser.id = ' + newuser._id);
 						next();
 					}
 				})

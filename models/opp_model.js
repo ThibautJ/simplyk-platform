@@ -4,7 +4,6 @@ var ObjectId = Schema.ObjectId;
 
 //Opportunity schema creation
 var Opp = mongoose.model('Opp', new Schema({
-	id: ObjectId,
 	intitule: String,
 	oName: String,
 	nbBenevoles: Number,
@@ -13,9 +12,10 @@ var Opp = mongoose.model('Opp', new Schema({
 	lat: Number,
 	lon: Number,
 	mail: String,
-	users: [{
-		id: { type: Schema.Types.ObjectId, ref: 'Users' },
-		status: String
+	applications: [{
+		applicant: { type: Schema.Types.ObjectId, ref: 'User' },
+		status: String,
+    story: String
 	}]
 }));
 

@@ -43,7 +43,7 @@ block content
                                 a(href='mailto:'+val.mail+'?subject=Participation%20à%20:%20'+val.intitule, target='_blank') Contactez
                               #collapseExample.div.collapse.tp-15
                                 div.well Es-tu sûr de vouloir t'inscrire ? <br> Ton aide sera très appréciée ! L'organisme va en être informé et confirmera ta participation. Tu peux aussi le contacter directement grâce au bouton 'S'inscrire' ci-dessus !<br> <br>
-                                  button.btn.btn-primary.pinkow.subscribe-button(type='button', onclick="location.href='profile';") Oui
+                                  button.btn.btn-primary.pinkow.subscribe-button(type='button') Oui
                                   button.btn.btn-primary.pinkow(type='button' data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample") Non
 
 
@@ -58,7 +58,7 @@ block footscript
         console.log('id : ' + identifiant);
         //On utilise l'identifiant de l'opp dans mongoDB pour traiter l'ajout de ce favori dans /addfavopp
         $.post('subscribe', {identifiant: identifiant}).done(function(){
-          console.log('id2 : ' + identifiant);
+          console.log('Identifiant de l\'opp : id2 : ' + identifiant);
           $.get('profile').done(function(){});
         });
       });
