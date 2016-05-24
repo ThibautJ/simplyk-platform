@@ -15,7 +15,7 @@ var Opp = mongoose.model('Opp', new Schema({
 	applications: [{
 		applicant: { type: Schema.Types.ObjectId, ref: 'User' },
 		status: String,
-    story: String
+		story: String
 	}]
 }));
 

@@ -24,8 +24,8 @@ block content
                     #identifiant(style="display:none")
                       p= val._id
                   div.media-right.media-middle
-                    button.btn.btn-default.media-object(type='button' data-toggle="modal" data-target="#myModal") Informations
-                    #myModal.modal.fade(tabindex='-1', role='dialog')
+                    button.btn.btn-default.media-object(type='button' data-toggle="modal" data-target= "."+val._id) Informations
+                    #myModal(tabindex='-1', role='dialog', class='modal fade ' + val._id)
                       .modal-dialog
                           .modal-content
                             .modal-header
@@ -38,13 +38,13 @@ block content
                               p= 'Adresse: '+ val.address
                             .modal-footer
                               button.btn.btn-default(type='button', data-dismiss='modal') Fermer
-                              #subscribe.button.btn.btn-default.pinkow(type='button', data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample") S'inscrire
+                              #subscribe.button.btn.btn-default.pinkow(type='button', data-toggle="collapse" data-target="#collapse"+val._id aria-expanded="false" aria-controls="collapseExample") S'inscrire
                               button.btn.btn-primary.pinkow(type='button')
                                 a(href='mailto:'+val.mail+'?subject=Participation%20à%20:%20'+val.intitule, target='_blank') Contactez
-                              #collapseExample.div.collapse.tp-15
+                              div.collapse.tp-15(id = "collapse" + val._id)
                                 div.well Es-tu sûr de vouloir t'inscrire ? <br> Ton aide sera très appréciée ! L'organisme va en être informé et confirmera ta participation. Tu peux aussi le contacter directement grâce au bouton 'S'inscrire' ci-dessus !<br> <br>
                                   button.btn.btn-primary.pinkow.subscribe-button(type='button') Oui
-                                  button.btn.btn-primary.pinkow(type='button' data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample") Non
+                                  button.btn.btn-primary.pinkow(type='button', data-dismiss='modal') Non
 
 
 block footscript
@@ -57,9 +57,13 @@ block footscript
         var identifiant = $(this).parents().parents().children('.media-body').children('#identifiant').children('p').html();
         console.log('id : ' + identifiant);
         //On utilise l'identifiant de l'opp dans mongoDB pour traiter l'ajout de ce favori dans /addfavopp
-        $.post('subscribe', {identifiant: identifiant}).done(function(){
-          console.log('Identifiant de l\'opp : id2 : ' + identifiant);
-          $.get('profile').done(function(){});
+        $.post('subscribe', {identifiant: identifiant}).done(function(data, status){
+          if(data.error){
+            alert("Remarque: " + data.error);
+          }
+          else if (data.redirect){
+            window.location.replace("/profile");
+          };
         });
       });
     });

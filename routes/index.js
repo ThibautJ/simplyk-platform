@@ -41,14 +41,14 @@ router.get('/map', stormpath.getUser, stormpath.loginRequired, function(req, res
 });
 
 router.get('/profile', stormpath.getUser, stormpath.loginRequired, function(req,res){
-	Opp.find({users: {$elemMatch: { _id: req.user.customData.id}}}, function(err, opps){
+	console.log('Begin get /profile')
+	Opp.find({applications: {$elemMatch: { applicant: req.user.customData.id}}}, function(err, opps){
 		if(err){
 			console.log(err);
 			res.render('profile.jade', {session: req.session, error: err});
 		}
 		//Create opps list
 		else{
-			console.log(opps);
 			res.render('profile.jade', {opps: opps, session: req.session, user: req.user});
 		}
 	});
@@ -61,29 +61,38 @@ router.post('/subscribe', stormpath.loginRequired, stormpath.getUser, function(r
 	//Search opp in DB
 	Opp.findById(id_new_favorite, function(err, opp){
 		if (err) return handleError(err);
-		//Create opps list
-		console.log('This opp will be added to favorite: '+ opp + ' with user_id ' + req.user.customData.id);
-		//If the user has already subscribe to this opp
-		if (opp.users.indexOf(req.user.customData.id) !== -1){
-			console.log('The user has already subscribed to this opp');
-		}
-		else{
-			console.log('The user has not yet subscribed to this opp');
-			opp.users.addToSet(req.user.customData.id);
-			opp.save(function(err){
-				if(err){
-					console(err);
-				}
-				else{
-					console.log('New subscribers array : ' + opp.users);
-				}
-			});
-		}
+		//If the user has already subscribed to this opp, end, if not, subscription and go to profile
+		findApplicants(opp, function(applicantsList){
+			console.log('applicantsList: '+applicantsList);
+			if (applicantsList.indexOf(req.user.customData.id) !== -1){
+				var error = 'Tu es déjà inscrit à cet évènement ! :)';
+				console.log(error);
+				res.send({error: error});
+			}
+			else{
+				console.log('The user has not yet subscribed to this opp');
+				opp.applications.addToSet({"applicant": req.user.customData.id, "status": "Pending", "story": null});
+				opp.save(function(err){
+					if(err){
+						console(err);
+					}
+					else{
+						console.log('redirect to profile')
+						res.send({redirect: 'profile'});
+					}
+				});
+			}
+		});
+		
 	});
-	console.log('out addfavapp');
-	res.end();
 });
 
-
+function findApplicants(opp, callback){
+	var list = [];
+	for (var i = 0; i < opp.applications.length; i++) {
+		list.push(opp.applications[i].applicant.toHexString());
+	};
+	return callback(list);
+}
 
 module.exports = router;
