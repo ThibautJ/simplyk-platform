@@ -13,6 +13,7 @@ var users = require('./routes/users');
 
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
+var User = require('./models/user_model.js');
 
 
 var app = express();
@@ -23,14 +24,6 @@ app.set('view engine', 'jade');
 
 //connect to mongo
 mongoose.connect('mongodb://tjaurou:Oeuf2poule@ds021999.mlab.com:21999/heroku_ggjmn8rl?connectTimeOutMS=30000');
-
-var User = mongoose.model('User', new Schema({
-	id: ObjectId,
-	fName: String,
-	lname: String,
-	email: String,
-	birth: Date
-}));
 
 
 app.use(session({
@@ -89,15 +82,16 @@ app.use(stormpath.init(app, {
 				res.json({error: error});
 			}
 			else{
-				User.findOne({'lname': formData.surname, 'email': formData.email}, 'id', function(err, user){
+				User.findOne({'lname': formData.surname, 'email': formData.email}, 'id', function(err, newuser){
 					if(err){
 						var error = 'Something bad happened! Try again! Click previous !';
 						console.log('@ user.findone : '+err);
 						res.json({error: error + '    ' + err});
 					}
 					else{
-						res.user_id = user._id;
-						console.log('The formData has just been registered! and user.id = ' + user._id);
+						console.log('User found : ' + newuser)
+						req.session.user_id = newuser._id;
+						console.log('The formData has just been registered! and newuser.id = ' + newuser._id);
 						next();
 					}
 				})
@@ -105,7 +99,9 @@ app.use(stormpath.init(app, {
 		})
 	},
 	postRegistrationHandler: function(account, req, res, next){
-		account.customData.id = req.user_id;
+		console.log('In postregistration, user.id = ' + req.session.user_id);
+		account.customData.id = req.session.user_id;
+		account.customData.save();
 		next();
 	}
 }));

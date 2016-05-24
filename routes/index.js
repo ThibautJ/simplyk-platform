@@ -6,24 +6,10 @@ var stormpathGroupsRequired = require('../middlewares/stormpathGroupsRequired').
 
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
+var Opp = require('../models/opp_model.js');
 
 var app = express();
 
-//Opportunity schema creation
-var Opp = mongoose.model('Opp', new Schema({
-	id: ObjectId,
-	intitule: String,
-	oName: String,
-	nbBenevoles: Number,
-	date: Date,
-	lat: Number,
-	lon: Number,
-	mail: String,
-	users: [{
-		id: { type: Schema.Types.ObjectId, ref: 'Story' },
-		status: String
-	}]//mails des utilisateurs qui ont mis l'opportunité en favori
-}));
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -45,81 +31,68 @@ router.get('/map', stormpath.getUser, stormpath.loginRequired, function(req, res
 	Opp.find({}, function(err, opps){
 		if(err){
 			console.log(err);
-			res.render('map.jade', {session: req.session});
+			res.render('map.jade', {session: req.session, error: err});
 		}
 		//Create opps list
 		else{			
 			res.render('map.jade', {opps: opps, session: req.session, user: req.user});
 		}
-	})
+	});
 });
 
 router.get('/profile', stormpath.getUser, stormpath.loginRequired, function(req,res){
-	console.log(req.user.customData.favopps);
-	res.render('profile.jade', {session: req.session/*, favs: req.user.customData.favopps*/});
-});
-
-
-router.post('/addfavopp', stormpath.loginRequired, stormpath.getUser, function(req,res){
-	//On utilise des objets javascripts à la place d'un tableau pour stocker les favoris.
-	//On peut alors utiliser l'identifiant de l'opp comme key de l'objet javascript.
-	//Conversion d'un array en objet {}
-	if(Array.isArray(req.user.customData.favopps)){
-		req.user.customData.favopps = {};
-	}
-
-	//identifiant de l'opp sur laquelle on a cliqué
-	var id_new_favorite=req.body.identifiant;
-	//contenu de cette opp, aussi sous la forme d'un objet javascript
-	//on lui rajoute l'identifiant. C'est pratique pour supprimer une opp depuis la page de favoris.
-	//Mais il y a peut-être une meilleure façon de faire.
-	var new_farovite={orgName:req.body.orgName, intitule:req.body.intitule, nbBenevoles:req.body.nbBenevoles, identifiant:id_new_favorite};
-
-	/*Opp.findOne({'oName': req.body.orgName, 'intitule': req.body.intitule}, 'favs',function(err, opps){
-		if (err) return handleError(err);
+	console.log('Begin get /profile')
+	Opp.find({applications: {$elemMatch: { applicant: req.user.customData.id}}}, function(err, opps){
+		if(err){
+			console.log(err);
+			res.render('profile.jade', {session: req.session, error: err});
+		}
 		//Create opps list
-		console.log('opps: '+opps + 'and opps.fav: ' + opps.favs);
-		opps.favs.addToSet(req.user.email);
-		opps.save(function(err){
-			if(err){
-				console(err);
-			}
-			else{
-			}
-		});
-	});*/
-	if(req.user.customData.favopps){
-		//On regarde si ce mandat est deja dans les favoris.
-		//Si le mandat est déjà dans les favoris, on le supprime.
-		if(req.user.customData.favopps[id_new_favorite]){
-			console.log("le mandat est deja dans les favoris : on le supprime");
-			delete req.user.customData.favopps[id_new_favorite];
-		}
 		else{
-			console.log("le mandat n'est pas encore dans les favoris : on le rajoute");
-			req.user.customData.favopps[id_new_favorite]=new_farovite;
-		}
-		
-	}
-	else{
-		console.log("Il n'y avait pas encore de favoris");
-		req.user.customData.favopps = {};
-		req.user.customData.favopps[id_new_favorite]=new_farovite;
-	}
-	console.log(req.user.customData.favopps);
-	req.user.customData.save(function (err) {
-		if (err) {
-			res.status(400).end('Oops!  There was an error: ' + err.userMessage);
-		}else{
-			console.log('Name was changed!');
+			res.render('profile.jade', {opps: opps, session: req.session, user: req.user});
 		}
 	});
-	///console.log('before addfavapp');
-	//console.log('out addfavapp');
-	console.log('out addfavapp');
-	res.end();
 });
 
 
+router.post('/subscribe', stormpath.loginRequired, stormpath.getUser, function(req,res){
+	//identifiant de l'opp sur laquelle on a cliqué
+	var id_new_favorite=req.body.identifiant;
+	//Search opp in DB
+	Opp.findById(id_new_favorite, function(err, opp){
+		if (err) return handleError(err);
+		//If the user has already subscribed to this opp, end, if not, subscription and go to profile
+		findApplicants(opp, function(applicantsList){
+			console.log('applicantsList: '+applicantsList);
+			if (applicantsList.indexOf(req.user.customData.id) !== -1){
+				var error = 'Tu es déjà inscrit à cet évènement ! :)';
+				console.log(error);
+				res.send({error: error});
+			}
+			else{
+				console.log('The user has not yet subscribed to this opp');
+				opp.applications.addToSet({"applicant": req.user.customData.id, "status": "Pending", "story": null});
+				opp.save(function(err){
+					if(err){
+						console(err);
+					}
+					else{
+						console.log('redirect to profile')
+						res.send({redirect: 'profile'});
+					}
+				});
+			}
+		});
+		
+	});
+});
+
+function findApplicants(opp, callback){
+	var list = [];
+	for (var i = 0; i < opp.applications.length; i++) {
+		list.push(opp.applications[i].applicant.toHexString());
+	};
+	return callback(list);
+}
 
 module.exports = router;
