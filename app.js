@@ -13,7 +13,7 @@ var users = require('./routes/users');
 
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
-var User = require('../models/user_model.js');
+var User = require('./models/user_model.js');
 
 
 var app = express();

@@ -31,7 +31,7 @@ router.get('/map', stormpath.getUser, stormpath.loginRequired, function(req, res
 	Opp.find({}, function(err, opps){
 		if(err){
 			console.log(err);
-			res.render('map.jade', {session: req.session, error: error});
+			res.render('map.jade', {session: req.session, error: err});
 		}
 		//Create opps list
 		else{			
@@ -41,8 +41,17 @@ router.get('/map', stormpath.getUser, stormpath.loginRequired, function(req, res
 });
 
 router.get('/profile', stormpath.getUser, stormpath.loginRequired, function(req,res){
-	console.log(req.user.customData.favopps);
-res.render('profile.jade', {session: req.session/*, favs: req.user.customData.favopps*/});
+	Opp.find({users: {$elemMatch: { _id: req.user.customData.id}}}, function(err, opps){
+		if(err){
+			console.log(err);
+			res.render('profile.jade', {session: req.session, error: err});
+		}
+		//Create opps list
+		else{
+			console.log(opps);
+			res.render('profile.jade', {opps: opps, session: req.session, user: req.user});
+		}
+	});
 });
 
 

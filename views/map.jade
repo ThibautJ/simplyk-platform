@@ -33,7 +33,6 @@ block content
                                 span(aria-hidden='true') &times;        
                               #myModalLabel.h4.modal-title= val.oName + ' - ' + val.intitule
                             .modal-body.my-modal-body
-                              p= val
                               p= 'Date: '+ val.date
                               p= 'Pour ' + val.nbBenevoles + ' bénévoles'
                               p= 'Adresse: '+ val.address
@@ -56,8 +55,12 @@ block footscript
       });
       $('.subscribe-button').click(function(){
         var identifiant = $(this).parents().parents().children('.media-body').children('#identifiant').children('p').html();
+        console.log('id : ' + identifiant);
         //On utilise l'identifiant de l'opp dans mongoDB pour traiter l'ajout de ce favori dans /addfavopp
-        $.post('subscribe', {identifiant: identifiant}).done(function(){});
+        $.post('subscribe', {identifiant: identifiant}).done(function(){
+          console.log('id2 : ' + identifiant);
+          $.get('profile').done(function(){});
+        });
       });
     });
     function initMap(){

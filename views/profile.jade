@@ -10,7 +10,8 @@ block content
           h1
             | Mon profil 
             small
-        |           
+          if error
+            p.alert.alert-danger #{error}
         ul.list-group
           li.list-group-item
             | Prénom: #{user.givenName}
@@ -29,41 +30,35 @@ block content
             small
       .col-md-4.col-md-offset-2
         .page-header
-          h1 Mes favoris
-        if favs
-          #offers-list.no-side-padding
+          h1 Mes inscriptions
+        #offers-list.no-side-padding
             ul.list-group.list-opportunity
-              each val in favs
+              each val, index in opps
                 li.list-group-item
                   div.media-left.media-middle
                     a(href='profile')
                       img.media-object(src='images/clouds.jpg')
                   div.media-body
-                    h4.media-heading= val.orgName
+                    h4.media-heading= val.oName
                     a.firstColor= val.intitule
-                    p= val.nbBenevoles
+                    p= 'Pour ' + val.nbBenevoles + ' bénévoles'
                     #identifiant(style="display:none")
-                      p= val.identifiant
-                  div.media-right.media-middle
-                    .i.icon.icon-star.icon-2x.favorite
+                      p= val._id
                   div.media-right.media-middle
                     button.btn.btn-default.media-object(type='button' data-toggle="modal" data-target="#myModal") Informations
                     #myModal.modal.fade(tabindex='-1', role='dialog')
-                          .modal-dialog
-                              .modal-content
-                                  .modal-header
-                                      button.close(type='button', data-dismiss='modal', aria-label='Close')
-                                          span(aria-hidden='true') &times;        
-                                        #myModalLabel.h4.modal-title= val + ' - ' + val
-                                    .modal-body.my-modal-body
-                                      p= 'Date: '+ val
-                                      p= 'Pour ' + val + ' bénévoles'
-                                      p= 'Latitude: '+ val
-                                      p= 'Longitude: '+ val
-                                    .modal-footer
-                                      button.btn.btn-default(type='button', data-dismiss='modal') Close
-                                      button.btn.btn-primary.pinkow(type='button')
-                                          a(href='mailto:'+val+'?subject=Participation%20à%20:%20'+val, target='_blank') Contactez
+                      .modal-dialog
+                          .modal-content
+                            .modal-header
+                              button.close(type='button', data-dismiss='modal', aria-label='Close')
+                                span(aria-hidden='true') &times;        
+                              #myModalLabel.h4.modal-title= val.oName + ' - ' + val.intitule
+                            .modal-body.my-modal-body
+                              p= 'Date: '+ val.date
+                              p= 'Pour ' + val.nbBenevoles + ' bénévoles'
+                              p= 'Adresse: '+ val.address
+                            .modal-footer
+                              button.btn.btn-default(type='button', data-dismiss='modal') Fermer
 
 block footscript
   script.
