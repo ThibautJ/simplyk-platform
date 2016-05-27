@@ -40,7 +40,7 @@ body{
 }
 
 #map{
-	height: 90vh;
+	height: 85vh;
 }
 
 #map-section{
@@ -48,7 +48,7 @@ body{
 }
 
 #offers-list{
-	overflow: auto;
+	height: 85vh;
 }
 
 .tp-15{
@@ -132,4 +132,8 @@ a:hover{
 
 .white {
 	color: #FF83CC;
+}
+
+.scrollable {
+	overflow-y: scroll;
 }
