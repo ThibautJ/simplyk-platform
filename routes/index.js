@@ -8,6 +8,7 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;
 var Opp = require('../models/opp_model.js');
 
+var subscribe = require('../middlewares/subscribe.js');
 var app = express();
 
 
@@ -40,21 +41,6 @@ router.get('/map', stormpath.getUser, stormpath.loginRequired, function(req, res
 	});
 });
 
-router.get('/profile', stormpath.getUser, stormpath.loginRequired, function(req,res){
-	console.log('Begin get /profile')
-	Opp.find({applications: {$elemMatch: { applicant: req.user.customData.id}}}, function(err, opps){
-		if(err){
-			console.log(err);
-			res.render('profile.jade', {session: req.session, error: err});
-		}
-		//Create opps list
-		else{
-			res.render('profile.jade', {opps: opps, session: req.session, user: req.user});
-		}
-	});
-});
-
-
 router.post('/subscribe', stormpath.loginRequired, stormpath.getUser, function(req,res){
 	//identifiant de l'opp sur laquelle on a cliqué
 	var id_new_favorite=req.body.identifiant;
@@ -62,7 +48,7 @@ router.post('/subscribe', stormpath.loginRequired, stormpath.getUser, function(r
 	Opp.findById(id_new_favorite, function(err, opp){
 		if (err) return handleError(err);
 		//If the user has already subscribed to this opp, end, if not, subscription and go to profile
-		findApplicants(opp, function(applicantsList){
+		subscribe.findApplicants(opp, function(applicantsList){
 			console.log('applicantsList: '+applicantsList);
 			if (applicantsList.indexOf(req.user.customData.id) !== -1){
 				var error = 'Tu es déjà inscrit à cet évènement ! :)';
@@ -86,13 +72,5 @@ router.post('/subscribe', stormpath.loginRequired, stormpath.getUser, function(r
 		
 	});
 });
-
-function findApplicants(opp, callback){
-	var list = [];
-	for (var i = 0; i < opp.applications.length; i++) {
-		list.push(opp.applications[i].applicant.toHexString());
-	};
-	return callback(list);
-}
 
 module.exports = router;
