@@ -1,5 +1,5 @@
 {
-  "name": "simplyk",
+  "name": "simplyk-admin",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -16,5 +16,18 @@
     "mongoose": "^4.4.12",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0"
-  }
+  },
+  "description": "Simplyk platform for admin",
+  "main": "app.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ThibautJ/simplyk-admin.git"
+  },
+  "author": "ThibautJaurou",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ThibautJ/simplyk-admin/issues"
+  },
+  "homepage": "https://github.com/ThibautJ/simplyk-admin#readme"
 }
