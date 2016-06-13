@@ -1,61 +1,122 @@
-NEW DOCUMENT
-{
-	Opp:{ // Volunteering opportunity
-		_id: objectId,
-		intitule: String,
-		users: []{
-			user_id: objectId,
-			status: String //If a user has been subscribed, confirmed, etc...
-		},
-		address: String,
-		date: Date,
-		lon: Double,
-		lat: Double,
-		nbVol: Double
+admin {
+	id: ObjectId,
+	name: text,
+	firstname: text,
+	lastname: text,
+	phone: text,
+	mail: text,
+	plan: text, //pricing plan
+
+}
+
+
+membership {
+	id: ObjectId,
+	user_id: ObjectId,
+	admin_id: ObjectId,
+	hours: integer,//hours already validated
+	objectives: integer//hours to be done
+}
+
+
+user {
+	id: ObjectId,
+	firstname: text,
+	lastname: text,
+	birthdate: date,
+	mail: text,
+	age: integer,
+	phone: text,
+	hours: integer,//hours already validated
+	admin: {
+		admin_id: ObjectId,
+		admin_name: text,
+		admin_mail: text
 	}
 }
-NEW DOCUMENT
-{
-	User:{ // People who volunteer
-		_id: objectId,
-		squadId: objectId,
-		lName: String,
-		fName: String,
-		birthdate: Date,
-		mail: String,
-		opps: [
-			{
-				opp_id: objectId,
-				status: String
-			}
-		],
-		squad_id: objectId
+
+
+participation_long {
+	user_id: ObjectId,
+	mandat_id: ObjectId,
+	status: text,//Pending, declined or approved
+	feedback:{
+		question: [{
+			question: text,
+			answer: text,
+			date: date
+		}]
 	}
 }
-NEW DOCUMENT
-{
-	Admin:{ // People who follow a squad of users (hours, opportunities done)
-		_id: objectId,
-		squadId: objectId,
-		name: String,
+
+
+participation_short {
+	user_id: ObjectId,
+	mandat_id: ObjectId
+	status: text,//Pending, declined or approved
+	feedback:{
+		question: [{
+			question: text,
+			answer: text,
+			date: date
+		}]
 	}
 }
-NEW DOCUMENT
-{
-	Organism:{ // Organism who need volunteers and publish opportunities then
-		_id: objectId,
-		oppsId:[objectId],
-		name: String,
-		cName: String,
-		phone: Double,
-		mail: String
-	}
-}
-NEW DOCUMENT
-{
-	Squad: { // Group of users who are followed by an admin (for example, a college)
-		_id: objectId,
-		adminId: objectId,
-		name: String,
-	}
+
+
+organism {
+	id: ObjectId,
+	name: text,
+	neq: number,
+	website: text,
+	firstname: text,
+	lastname: text,
+	phone: text,
+	mail: text,
+	cause: text,
+	validation: text,//Simplyk approved ?
+	volunteers: [{
+		user_id: ObjectId,
+		user_name: text,
+		user_age: integer
+	}],
+	opp_long: [{
+		id: ObjectId,
+		title: text,
+		description: text,
+		langage: text,
+		contact?: text,
+		age_min: text,
+		expiration: date,//?
+		judicial:boolean,//Judicial verification
+		address: text,
+		cause: text,
+		mandats_long: [{
+			id: ObjectId,
+			slot: text,
+			duration: text,
+			vol_number: integer,
+			tags: [text]
+		}]
+	}],
+	opp_short: [{
+		id: ObjectId,
+		title: text,
+		description: text,
+		langage: text,
+		contact?: text,
+		age_min: text,
+		date: date,
+		judicial:boolean,
+		address: text,
+		cause: text,
+		mandats_short: [{
+			id: ObjectId,
+			start_hour: date,
+			end_hour: date,
+			activity: text,
+			flexible: boolean,
+			vol_number: integer
+		}]
+	}]
 }

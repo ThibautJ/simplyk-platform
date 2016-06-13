@@ -1,0 +1,37 @@
+extends ./layout.jade
+block vars
+  - var page = 'classexample'
+
+
+block content
+      .container-fluid
+        .row.fill
+          ol.breadcrumb
+              li
+                a(href="dashboard") 4ème secondaire
+              li
+                a(href="classes") Mes classes
+              li.active 4ème secondaire
+          .col-md-7.col-md-offset-1
+            h1.page-header 4ème secondaire
+            li.list-group-item
+                  div.media-left.media-middle
+                    a(href='profile')
+                      img.media-object(src='images/clouds.jpg')
+                  div.media-body
+                    h4.media-heading Martin Beaudet
+                    a.firstColor Elève international
+                    p Date de naissance : 02/04/2001
+                    #identifiant(style="display:none")
+                      p= val._id
+                  div.media-right.media-middle
+                    button.btn.btn-default.media-object(type='button') Dossier
+
+
+block footscript
+  // jQuery (necessary for Bootstrap's JavaScript plugins)
+  script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
+  // jQuery
+  script(src='javascripts/my-jquery.js')
+  // Include all compiled plugins (below), or include individual files as needed
+  script(src='javascripts/bootstrap.min.js')
