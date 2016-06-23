@@ -19,7 +19,22 @@ nav#nav-me.navbar.navbar-default
         unless page=='map'
           li.navbar-link(role='presentation')
             a(href='map') Carte
-      if user
         li(role='presentation')
           form.navbar-form( method='post', action='logout')
             button.btn.btn-success-outline.pinkow(type='submit') Déconnexion
+      else
+        li.navbar-link(role='presentation')
+          a(href='map') Je cherche des bénévoles !
+        li(role='presentation')
+          form.navbar-form
+            li.dropdown
+              button.btn.btn-default.dropdown-toggle(data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false") Inscris-toi ! 
+                span.caret
+              ul.dropdown-menu
+                li
+                  a(href='listorganisms') Organismes
+                li
+                  a(href='listorganisms') Bénévoles
+        li(role='presentation')
+          form.navbar-form( method='get', action='login')
+            button.btn.btn-success-outline.pinkow(type='submit') Connexion
