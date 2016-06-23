@@ -25,9 +25,18 @@ user {
 	lastname: text,
 	birthdate: date,
 	mail: text,
-	age: integer,
+	age: integer, //calculated from birthdate
 	phone: text,
 	hours: integer,//hours already validated
+	interests: text,
+	skills: text,
+	complete: boolean, // for instance profile is completed for a minor if contact is filled
+	emergency : { // this contact is needed for minors
+		em_name: text,
+		em_phone: integer,
+	
+	}
+	student: boolean, //if has a school or not
 	admin: {
 		admin_id: ObjectId,
 		admin_name: text,
@@ -53,6 +62,10 @@ participation_long {
 participation_short {
 	user_id: ObjectId,
 	mandat_id: ObjectId
+	title: text
+	activity: text
+	start hour: date
+	end hour : date
 	status: text,//Pending, declined or approved
 	feedback:{
 		question: [{
@@ -73,24 +86,25 @@ organism {
 	lastname: text,
 	phone: text,
 	mail: text,
-	cause: text,
-	validation: text,//Simplyk approved ?
+	cause: text, // solidarité, environnement, culture
+	validation: boolean,//Simplyk approved ?
 	volunteers: [{
 		user_id: ObjectId,
 		user_name: text,
 		user_age: integer
 	}],
 	opp_long: [{
-		id: ObjectId,
+		opp_id: ObjectId,
 		title: text,
 		description: text,
 		langage: text,
-		contact?: text,
-		age_min: text,
+		contact: text,// dans le cas ou ce n'est pas le même que celui qui rentre l'opp ??
+		age_min: integer,
 		expiration: date,//?
 		judicial:boolean,//Judicial verification
 		address: text,
 		cause: text,
+		slot: text,
 		mandats_long: [{
 			id: ObjectId,
 			slot: text,

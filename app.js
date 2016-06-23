@@ -10,7 +10,8 @@ var session = require('client-sessions');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var profile = require('./routes/profile')
+var profile = require('./routes/profile');
+//var listorganisms = require('./routes/listorganisms');
 
 var Schema = mongoose.Schema;
 var ObjectId = Schema.ObjectId;

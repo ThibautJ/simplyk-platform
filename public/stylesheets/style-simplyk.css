@@ -19,6 +19,19 @@ body{
 	height: inherit;
 }
 
+#logo_entrance{
+	max-width: 70vw;
+	max-height: 40vh;
+	display: block;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#first_section_entrance{
+	height: 500px;
+	background-image: url('../images/congruent_pentagon.png');
+}
+
 .page{
 	padding-right: 0px;
 	padding-left: 0px;
@@ -28,6 +41,7 @@ body{
 #nav-me{
 	background-color: #FFFFff;
 	opacity: 100%;
+	margin-bottom: 0px;
 }
 
 #nav-me a{
@@ -136,4 +150,15 @@ a:hover{
 
 .scrollable {
 	overflow-y: scroll;
+}
+
+.footer {
+	padding-top: 40px;
+	height: 140px;
+	background-color: black;
+}
+
+.footer a{
+	margin-left: 15px;
+	margin-right: 15px;
 }

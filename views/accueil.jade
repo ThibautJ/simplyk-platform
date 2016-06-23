@@ -4,35 +4,151 @@ block vars
   
 
 block content
-      #map-section.container-fluid.degrade
-        .row
+      .container-fluid.degrade
+        #first_section_entrance.row
           .col-md-8.col-md-offset-2
-            .page-header
-              h1
-                | Bienvenue 
-                small Simplyk
-              h2
-                small Que tu sois un citoyen ou un organisme en recherche de bénévoles, rejoins-nous !
+            .logo
+              img#logo_entrance(src='images/simplyk_log_text_v2.png', align='middle')
+              h2.text-center Trouve-toi une opportunité de bénévolat ! <br><br>
+                i.fa.fa-arrow-down.fa-2x.text-center.firstColor(aria-hidden='true')
             if error
               p.alert.alert-danger ERROR : #{error}
+      .container-fluid
+        .row.fill
+          .col-md-7.no-side-padding
+            #map
+          #offers-list.col-md-5.no-side-padding.scrollable
+            ul.list-group.list-opportunity
+              if error
+                p.alert.alert-danger #{error}
+              each val, index in opps
+                li.list-group-item
+                  div.media-left.media-middle
+                    a(href='profile')
+                      img.media-object(src='images/clouds.jpg')
+                  div.media-body
+                    h4.media-heading= val.oName
+                    a.firstColor= val.intitule
+                    p= 'Pour ' + val.nbBenevoles + ' bénévoles'
+                    #identifiant(style="display:none")
+                      p= val._id
+                  div.media-right.media-middle
+                    button.btn.btn-default.media-object(type='button' data-toggle="modal" data-target= "."+val._id) Informations
+                    #myModal(tabindex='-1', role='dialog', class='modal fade ' + val._id)
+                      .modal-dialog
+                          .modal-content
+                            .modal-header
+                              button.close(type='button', data-dismiss='modal', aria-label='Close')
+                                span(aria-hidden='true') &times;        
+                              #myModalLabel.h4.modal-title= val.oName + ' - ' + val.intitule
+                            .modal-body.my-modal-body
+                              p= 'Date: '+ val.date
+                              p= 'Pour ' + val.nbBenevoles + ' bénévoles'
+                              p= 'Adresse: '+ val.address
+                            .modal-footer
+                              button.btn.btn-default(type='button', data-dismiss='modal') Fermer
+                              #subscribe.button.btn.btn-default.pinkow(type='button', data-toggle="collapse" data-target="#collapse"+val._id aria-expanded="false" aria-controls="collapseExample") S'inscrire
+                              button.btn.btn-primary.pinkow(type='button')
+                                a(href='mailto:'+val.mail+'?subject=Participation%20à%20:%20'+val.intitule, target='_blank') Contactez
+                              div.collapse.tp-15(id = "collapse" + val._id)
+                                div.well Es-tu sûr de vouloir t'inscrire ? <br> Ton aide sera très appréciée ! L'organisme va en être informé et confirmera ta participation. Tu peux aussi le contacter directement grâce au bouton 'S'inscrire' ci-dessus !<br> <br>
+                                  button.btn.btn-primary.pinkow.subscribe-button(type='button') Oui
+                                  button.btn.btn-primary.pinkow(type='button', data-dismiss='modal') Non
+      .container-fluid.footer
         .row
-          .col-md-4.col-md-offset-2
-            .panel.panel-default
-              .panel-heading 
-                h2 Organisme
-              .panel-body
-                p.alert.alert-danger Tu es un organisme ? Tu recherches des bénévoles ? C'est ici !
-                h3 Connexion
-                a.btn.btn-default(href='http://organism.simplyk.org/login') On se connecte
-                h3 Créer un compte
-                a.btn.btn-default(href='http://organism.simplyk.org/register') Rentre dans l'aventure
-          .col-md-4
-            .panel.panel-default
-              .panel-heading 
-                h2 Bénévoles
-              .panel-body
-                p.alert.alert-danger Tu as envie d'aider autour de toi ? De faire de belles rencontres ? De passer des bons moments ? Tu es bienvenu !
-                h3 Connexion
-                a.btn.btn-default(href='login') On se connecte
-                h3 Créer un compte
-                a.btn.btn-default(href='register') Rentre dans l'aventure
+          .col-md-8.col-md-offset-2
+            p.text-center.white Simplyk, Facilitateur de Bénévolat
+          .col-md-2
+            p.white Suivez-nous !
+            a(href="https://www.facebook.com/simplykMTL/?fref=ts")
+              i.icon.icon-2x.icon-sk.icon-sk-white.icon-facebook-official
+            a(href="https://twitter.com/simplykMTL")
+              i.icon.icon-2x.icon-sk.icon-sk-white.icon-twitter
+
+
+block footscript
+  script.
+    $( document ).ready(function() {
+      $('.subscribe').click(function(){
+
+      });
+      $('.subscribe-button').click(function(){
+        var identifiant = $(this).parents().parents().children('.media-body').children('#identifiant').children('p').html();
+        console.log('id : ' + identifiant);
+        //On utilise l'identifiant de l'opp dans mongoDB pour traiter l'ajout de ce favori dans /addfavopp
+        $.post('subscribe', {identifiant: identifiant}).done(function(data, status){
+          if(data.error){
+            alert("Remarque: " + data.error);
+          }
+          else if (data.redirect){
+            window.location.replace("/profile");
+          };
+        });
+      });
+    });
+    function initMap(){
+      function listStar(i){
+        listElement = document.getElementById("offers-list").childNodes[0].childNodes[i];
+        $(listElement).addClass('starring');
+        console.log(listElement);
+      }
+      function listUnstar(i){
+        listElement = document.getElementById("offers-list").childNodes[0].childNodes[i];
+        $(listElement).removeClass('starring');
+        console.log(listElement);
+      }
+      function openListInfos(i){
+        listElement = document.getElementById("offers-list").childNodes[0].childNodes[i];
+        listElement.childNodes[2].childNodes[0].click();
+        console.log(listElement.childNodes[2]);
+      }
+      var mapDiv = document.getElementById('map');
+      var map = new google.maps.Map(mapDiv, {
+        center: {lat: 45.503, lng: -73.613},
+        zoom: 12,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+      });
+      //Generate markers
+      var opports = !{JSON.stringify(opps)};
+      var infowindows = [];
+      var markers = [];
+      function attachInfoWindow(marker, infoWindow, opp, i){
+        marker.addListener('click', function(){
+          openListInfos(i);
+        });
+        marker.addListener('mouseover', function(){
+          infoWindow.open(map, marker);
+          listStar(i);
+        });
+        marker.addListener('mouseout', function(){
+          infoWindow.close();
+          listUnstar(i);
+        });
+      };
+      for(i=0; i<opports.length; i++){
+        console.log(opports[i].intitule + " marker generated");
+        var opp = opports[i];
+        infowindows[i] = new google.maps.InfoWindow({
+          content: opp.intitule
+        });
+        markers[i] = new google.maps.Marker({
+          position: {lat: opp.lat, lng: opp.lon},
+          map: map,
+          clickable: true
+        });
+        attachInfoWindow(markers[i], infowindows[i], opp, i);
+      }
+    }
+  script(src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRPJIqo9jqMb99E47aKuO64rxugd3S-Wk&callback=initMap"
+         async defer)
+  // jQuery (necessary for Bootstrap's JavaScript plugins)
+  script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js')
+  // jQuery
+  script(src='javascripts/my-jquery.js')
+  // Include all compiled plugins (below), or include individual files as needed
+  script(src='javascripts/bootstrap.min.js')
+  //Modal bootstrap
+  script(type='text/javascript').
+    $('#myModal').on('shown.bs.modal', function () {
+      $('#myInput').focus();
+    });
