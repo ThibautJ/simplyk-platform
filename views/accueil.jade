@@ -46,14 +46,10 @@ block content
                               p= 'Pour ' + val.nbBenevoles + ' bénévoles'
                               p= 'Adresse: '+ val.address
                             .modal-footer
-                              button.btn.btn-default(type='button', data-dismiss='modal') Fermer
-                              #subscribe.button.btn.btn-default.pinkow(type='button', data-toggle="collapse" data-target="#collapse"+val._id aria-expanded="false" aria-controls="collapseExample") S'inscrire
+                              #subscribe.button.btn.btn-default.pinkowa
+                                a(href='signup') S'inscrire
                               button.btn.btn-primary.pinkow(type='button')
-                                a(href='mailto:'+val.mail+'?subject=Participation%20à%20:%20'+val.intitule, target='_blank') Contactez
-                              div.collapse.tp-15(id = "collapse" + val._id)
-                                div.well Es-tu sûr de vouloir t'inscrire ? <br> Ton aide sera très appréciée ! L'organisme va en être informé et confirmera ta participation. Tu peux aussi le contacter directement grâce au bouton 'S'inscrire' ci-dessus !<br> <br>
-                                  button.btn.btn-primary.pinkow.subscribe-button(type='button') Oui
-                                  button.btn.btn-primary.pinkow(type='button', data-dismiss='modal') Non
+                                a(href='signup') Contactez
       .container-fluid.footer
         .row
           .col-md-8.col-md-offset-2
